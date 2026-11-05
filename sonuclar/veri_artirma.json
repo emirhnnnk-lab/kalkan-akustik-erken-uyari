@@ -1,0 +1,50 @@
+{
+ "artirma_x0_lojistik": {
+  "B_AUC": 0.837,
+  "tespit_fa": [
+   42.3,
+   5.3
+  ],
+  "egitim_ornek": 420
+ },
+ "artirma_x0_MLP_32": {
+  "B_AUC": 0.748,
+  "tespit_fa": [
+   42.0,
+   8.7
+  ],
+  "egitim_ornek": 420
+ },
+ "artirma_x2_lojistik": {
+  "B_AUC": 0.745,
+  "tespit_fa": [
+   39.7,
+   15.7
+  ],
+  "egitim_ornek": 1200
+ },
+ "artirma_x2_MLP_32": {
+  "B_AUC": 0.697,
+  "tespit_fa": [
+   47.7,
+   15.3
+  ],
+  "egitim_ornek": 1200
+ },
+ "artirma_x5_lojistik": {
+  "B_AUC": 0.725,
+  "tespit_fa": [
+   36.7,
+   17.0
+  ],
+  "egitim_ornek": 2460
+ },
+ "artirma_x5_MLP_32": {
+  "B_AUC": 0.686,
+  "tespit_fa": [
+   49.7,
+   17.3
+  ],
+  "egitim_ornek": 2460
+ }
+}

@@ -1,0 +1,28 @@
+{
+ "esik": 6.0,
+ "0_dron": {
+  "dogru_%": 80.7,
+  "±1_%": 88.0,
+  "ortalama_tahmin": 0.35
+ },
+ "1_dron": {
+  "dogru_%": 77.3,
+  "±1_%": 100.0,
+  "ortalama_tahmin": 1.05
+ },
+ "2_dron": {
+  "dogru_%": 8.7,
+  "±1_%": 72.0,
+  "ortalama_tahmin": 0.81
+ },
+ "3_dron": {
+  "dogru_%": 0.0,
+  "±1_%": 4.0,
+  "ortalama_tahmin": 0.61
+ },
+ "4_dron": {
+  "dogru_%": 0.0,
+  "±1_%": 0.0,
+  "ortalama_tahmin": 0.33
+ }
+}

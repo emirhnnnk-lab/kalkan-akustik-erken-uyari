@@ -1,0 +1,38 @@
+[
+ {
+  "ortak_olay": 0,
+  "darbe_ayiklama": false,
+  "tespit_%": 98.8,
+  "yanlis_alarm_%": 4.38
+ },
+ {
+  "ortak_olay": 0,
+  "darbe_ayiklama": true,
+  "tespit_%": 96.6,
+  "yanlis_alarm_%": 1.2
+ },
+ {
+  "ortak_olay": 0.1,
+  "darbe_ayiklama": false,
+  "tespit_%": 98.7,
+  "yanlis_alarm_%": 13.01
+ },
+ {
+  "ortak_olay": 0.1,
+  "darbe_ayiklama": true,
+  "tespit_%": 96.6,
+  "yanlis_alarm_%": 5.74
+ },
+ {
+  "ortak_olay": 0.2,
+  "darbe_ayiklama": false,
+  "tespit_%": 98.7,
+  "yanlis_alarm_%": 21.24
+ },
+ {
+  "ortak_olay": 0.2,
+  "darbe_ayiklama": true,
+  "tespit_%": 96.6,
+  "yanlis_alarm_%": 10.93
+ }
+]

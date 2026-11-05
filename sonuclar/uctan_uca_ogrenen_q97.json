@@ -1,0 +1,24 @@
+{
+ "tek_asker": {
+  "AUC": 0.974,
+  "tespit_%": 93.0,
+  "yanlis_alarm_%": 15.0
+ },
+ "zincir": [
+  {
+   "ortak_olay": 0,
+   "tespit_%": 98.8,
+   "yanlis_alarm_%": 0.63
+  },
+  {
+   "ortak_olay": 0.1,
+   "tespit_%": 98.7,
+   "yanlis_alarm_%": 4.06
+  },
+  {
+   "ortak_olay": 0.2,
+   "tespit_%": 98.7,
+   "yanlis_alarm_%": 7.01
+  }
+ ]
+}

@@ -1,0 +1,37 @@
+[
+ {
+  "darbe_esigi_dB": 6,
+  "tespit_%": 32.0,
+  "yanlis_alarm_%": 10.0,
+  "ayiklanan_dron_%": 58.0,
+  "ayiklanan_diger_%": 64.0
+ },
+ {
+  "darbe_esigi_dB": 9,
+  "tespit_%": 66.0,
+  "yanlis_alarm_%": 12.0,
+  "ayiklanan_dron_%": 22.0,
+  "ayiklanan_diger_%": 49.0
+ },
+ {
+  "darbe_esigi_dB": 12,
+  "tespit_%": 83.0,
+  "yanlis_alarm_%": 15.0,
+  "ayiklanan_dron_%": 5.0,
+  "ayiklanan_diger_%": 35.0
+ },
+ {
+  "darbe_esigi_dB": 15,
+  "tespit_%": 86.0,
+  "yanlis_alarm_%": 16.0,
+  "ayiklanan_dron_%": 2.0,
+  "ayiklanan_diger_%": 30.0
+ },
+ {
+  "darbe_esigi_dB": 99,
+  "tespit_%": 88.0,
+  "yanlis_alarm_%": 22.0,
+  "ayiklanan_dron_%": 0.0,
+  "ayiklanan_diger_%": 3.0
+ }
+]

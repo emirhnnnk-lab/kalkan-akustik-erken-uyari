@@ -1,0 +1,17 @@
+{
+ "varsayim": "Fiber kablo termal kamerada görünür mü? Kaba fizik hesabı (varsayımlar aşağıda, ölçülmedi).\nKamera: 640 px, 24° yatay görüş (tipik LWIR, 13 mm lens) → piksel açısı IFOV = 0,65 mrad. NETD 50 mK.\nKablo çapı 0,5 mm (kaplamalı tek mod fiber ~0,25–0,9 mm), yayınım 0,9, hava sıcaklığında.\nAlt piksel hedef: görünen sıcaklık farkı ≈ doluluk × yayınım × ΔT_arka plan × bulanıklık (0,5).\nKullanıcının fikri: kablo düz/hafif eğri bir çizgi → çizgi boyunca N pikseli toplamak gürültüyü √N kadar düşürür.\nTespit ölçütü: sinyal ≥ 5 × gürültü.",
+ "azami_mesafe_m": {
+  "açık gökyüzü (ΔT≈40 K)": {
+   "tek piksel": 55.0,
+   "çizgi boyunca 100 piksel": 550.0
+  },
+  "bulutlu gökyüzü (ΔT≈8 K)": {
+   "tek piksel": 11.0,
+   "çizgi boyunca 100 piksel": 110.0
+  },
+  "toprak/çim zemin (ΔT≈2 K)": {
+   "tek piksel": 2.8,
+   "çizgi boyunca 100 piksel": 27.5
+  }
+ }
+}

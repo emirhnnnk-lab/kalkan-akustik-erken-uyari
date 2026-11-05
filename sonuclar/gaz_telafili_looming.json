@@ -1,0 +1,23 @@
+[
+ {
+  "gaz_devir_dalgalanma_%": 2,
+  "telafisiz": 39.6,
+  "telafi_k5": 39.9,
+  "telafi_k3": 40.7,
+  "telafi_k7": 39.2
+ },
+ {
+  "gaz_devir_dalgalanma_%": 4,
+  "telafisiz": 44.4,
+  "telafi_k5": 38.7,
+  "telafi_k3": 40.9,
+  "telafi_k7": 41.0
+ },
+ {
+  "gaz_devir_dalgalanma_%": 6,
+  "telafisiz": 52.4,
+  "telafi_k5": 39.4,
+  "telafi_k3": 41.9,
+  "telafi_k7": 41.2
+ }
+]

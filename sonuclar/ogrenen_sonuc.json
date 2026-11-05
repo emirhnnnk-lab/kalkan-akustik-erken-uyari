@@ -1,0 +1,44 @@
+{
+ "ornek": 1260,
+ "ozellik": 65,
+ "lojistik": {
+  "AUC_karisik_test": 0.971,
+  "tespit_%": 94.3,
+  "yanlis_alarm_%": 8.3,
+  "AUC_A": 0.876,
+  "tespit_fa_A": [
+   86.7,
+   35.3
+  ],
+  "AUC_B": 0.996,
+  "tespit_fa_B": [
+   100.0,
+   2.9
+  ],
+  "capraz_A_egit_B_test_AUC": 0.797,
+  "capraz_tespit_fa": [
+   39.7,
+   8.3
+  ]
+ },
+ "MLP_32": {
+  "AUC_karisik_test": 0.981,
+  "tespit_%": 98.1,
+  "yanlis_alarm_%": 7.8,
+  "AUC_A": 0.909,
+  "tespit_fa_A": [
+   97.8,
+   29.4
+  ],
+  "AUC_B": 0.999,
+  "tespit_fa_B": [
+   98.3,
+   3.5
+  ],
+  "capraz_A_egit_B_test_AUC": 0.73,
+  "capraz_tespit_fa": [
+   31.3,
+   10.0
+  ]
+ }
+}

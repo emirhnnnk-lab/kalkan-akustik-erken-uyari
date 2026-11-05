@@ -1,0 +1,48 @@
+{
+ "esik": 5.852,
+ "pencere_sayisi": [
+  300,
+  300,
+  300
+ ],
+ "AUC_dron_vs_arkaplan": 0.772,
+ "AUC_dron_vs_helikopter": 0.849,
+ "tespit_%": 51.3,
+ "yanlis_alarm_arkaplan_%": 14.7,
+ "yanlis_alarm_helikopter_%": 0.3,
+ "medyan_skor": {
+  "dron": 5.92,
+  "helikopter": 4.23,
+  "arkaplan": 4.49
+ },
+ "saha_kalibrasyonu": [
+  {
+   "k": 1.0,
+   "esik": 5.35,
+   "tespit_%": 59.0,
+   "yanlis_alarm_arkaplan_%": 15.3,
+   "yanlis_alarm_helikopter_%": 5.0
+  },
+  {
+   "k": 1.5,
+   "esik": 5.77,
+   "tespit_%": 52.0,
+   "yanlis_alarm_arkaplan_%": 12.0,
+   "yanlis_alarm_helikopter_%": 0.3
+  },
+  {
+   "k": 2.0,
+   "esik": 6.18,
+   "tespit_%": 46.0,
+   "yanlis_alarm_arkaplan_%": 8.0,
+   "yanlis_alarm_helikopter_%": 0.3
+  },
+  {
+   "k": 3.0,
+   "esik": 7.01,
+   "tespit_%": 38.3,
+   "yanlis_alarm_arkaplan_%": 3.3,
+   "yanlis_alarm_helikopter_%": 0.0
+  }
+ ]
+}

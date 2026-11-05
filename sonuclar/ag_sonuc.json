@@ -1,0 +1,74 @@
+[
+ {
+  "senaryo": "ideal",
+  "konum_hatasi_m": 37.0,
+  "uyari_suresi_s": 10.0,
+  "uyari>3s_%": 100
+ },
+ {
+  "senaryo": "paket %10",
+  "konum_hatasi_m": 38.9,
+  "uyari_suresi_s": 9.9,
+  "uyari>3s_%": 100
+ },
+ {
+  "senaryo": "paket %30 (engebeli arazi)",
+  "konum_hatasi_m": 41.0,
+  "uyari_suresi_s": 9.9,
+  "uyari>3s_%": 100
+ },
+ {
+  "senaryo": "paket %60",
+  "konum_hatasi_m": 46.2,
+  "uyari_suresi_s": 9.7,
+  "uyari>3s_%": 100
+ },
+ {
+  "senaryo": "gecikme 0,5 s",
+  "konum_hatasi_m": 45.8,
+  "uyari_suresi_s": 9.4,
+  "uyari>3s_%": 100
+ },
+ {
+  "senaryo": "1 asker düştü",
+  "konum_hatasi_m": 42.1,
+  "uyari_suresi_s": 9.9,
+  "uyari>3s_%": 100
+ },
+ {
+  "senaryo": "2 asker düştü",
+  "konum_hatasi_m": 45.5,
+  "uyari_suresi_s": 9.7,
+  "uyari>3s_%": 100
+ },
+ {
+  "senaryo": "paket %30 + 1 düğüm",
+  "konum_hatasi_m": 46.9,
+  "uyari_suresi_s": 9.6,
+  "uyari>3s_%": 100
+ },
+ {
+  "senaryo": "röle dron: paket %30→%5",
+  "konum_hatasi_m": 39.4,
+  "uyari_suresi_s": 9.8,
+  "uyari>3s_%": 100
+ },
+ {
+  "senaryo": "röle + 1 düğüm",
+  "konum_hatasi_m": 46.6,
+  "uyari_suresi_s": 9.8,
+  "uyari>3s_%": 100
+ },
+ {
+  "senaryo": "manga 120 m'ye yayıldı (paket %10)",
+  "konum_hatasi_m": 15.3,
+  "uyari_suresi_s": 10.0,
+  "uyari>3s_%": 100
+ },
+ {
+  "senaryo": "+2 ileri dinleme noktası (150 m önde) (paket %10)",
+  "konum_hatasi_m": 8.6,
+  "uyari_suresi_s": 11.0,
+  "uyari>3s_%": 100
+ }
+]

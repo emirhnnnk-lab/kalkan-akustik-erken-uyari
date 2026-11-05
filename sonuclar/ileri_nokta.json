@@ -1,0 +1,359 @@
+[
+ {
+  "nokta": 0,
+  "mesafe_m": 0,
+  "yanal_m": 0,
+  "hata_m": 41.8,
+  "uyari_s": 9.8
+ },
+ {
+  "nokta": 1,
+  "mesafe_m": 50,
+  "yanal_m": 0,
+  "hata_m": 24.6,
+  "uyari_s": 10.1
+ },
+ {
+  "nokta": 1,
+  "mesafe_m": 100,
+  "yanal_m": 0,
+  "hata_m": 12.4,
+  "uyari_s": 10.0
+ },
+ {
+  "nokta": 1,
+  "mesafe_m": 150,
+  "yanal_m": 0,
+  "hata_m": 9.7,
+  "uyari_s": 10.1
+ },
+ {
+  "nokta": 1,
+  "mesafe_m": 200,
+  "yanal_m": 0,
+  "hata_m": 9.6,
+  "uyari_s": 10.0
+ },
+ {
+  "nokta": 1,
+  "mesafe_m": 300,
+  "yanal_m": 0,
+  "hata_m": 10.9,
+  "uyari_s": 10.0
+ },
+ {
+  "nokta": 2,
+  "mesafe_m": 50,
+  "yanal_m": 40,
+  "hata_m": 15.9,
+  "uyari_s": 10.6
+ },
+ {
+  "nokta": 2,
+  "mesafe_m": 50,
+  "yanal_m": 80,
+  "hata_m": 10.3,
+  "uyari_s": 10.3
+ },
+ {
+  "nokta": 2,
+  "mesafe_m": 50,
+  "yanal_m": 160,
+  "hata_m": 9.3,
+  "uyari_s": 10.1
+ },
+ {
+  "nokta": 2,
+  "mesafe_m": 100,
+  "yanal_m": 40,
+  "hata_m": 10.0,
+  "uyari_s": 11.0
+ },
+ {
+  "nokta": 2,
+  "mesafe_m": 100,
+  "yanal_m": 80,
+  "hata_m": 9.1,
+  "uyari_s": 10.7
+ },
+ {
+  "nokta": 2,
+  "mesafe_m": 100,
+  "yanal_m": 160,
+  "hata_m": 9.5,
+  "uyari_s": 10.2
+ },
+ {
+  "nokta": 2,
+  "mesafe_m": 150,
+  "yanal_m": 40,
+  "hata_m": 8.9,
+  "uyari_s": 11.8
+ },
+ {
+  "nokta": 2,
+  "mesafe_m": 150,
+  "yanal_m": 80,
+  "hata_m": 8.7,
+  "uyari_s": 10.7
+ },
+ {
+  "nokta": 2,
+  "mesafe_m": 150,
+  "yanal_m": 160,
+  "hata_m": 9.2,
+  "uyari_s": 10.5
+ },
+ {
+  "nokta": 2,
+  "mesafe_m": 200,
+  "yanal_m": 40,
+  "hata_m": 8.9,
+  "uyari_s": 12.0
+ },
+ {
+  "nokta": 2,
+  "mesafe_m": 200,
+  "yanal_m": 80,
+  "hata_m": 8.9,
+  "uyari_s": 11.3
+ },
+ {
+  "nokta": 2,
+  "mesafe_m": 200,
+  "yanal_m": 160,
+  "hata_m": 9.4,
+  "uyari_s": 10.6
+ },
+ {
+  "nokta": 2,
+  "mesafe_m": 300,
+  "yanal_m": 40,
+  "hata_m": 10.2,
+  "uyari_s": 13.4
+ },
+ {
+  "nokta": 2,
+  "mesafe_m": 300,
+  "yanal_m": 80,
+  "hata_m": 10.2,
+  "uyari_s": 11.9
+ },
+ {
+  "nokta": 2,
+  "mesafe_m": 300,
+  "yanal_m": 160,
+  "hata_m": 10.7,
+  "uyari_s": 10.6
+ },
+ {
+  "nokta": 3,
+  "mesafe_m": 50,
+  "yanal_m": 40,
+  "hata_m": 15.8,
+  "uyari_s": 10.9
+ },
+ {
+  "nokta": 3,
+  "mesafe_m": 50,
+  "yanal_m": 80,
+  "hata_m": 12.2,
+  "uyari_s": 10.9
+ },
+ {
+  "nokta": 3,
+  "mesafe_m": 50,
+  "yanal_m": 160,
+  "hata_m": 8.7,
+  "uyari_s": 10.7
+ },
+ {
+  "nokta": 3,
+  "mesafe_m": 100,
+  "yanal_m": 40,
+  "hata_m": 10.0,
+  "uyari_s": 11.7
+ },
+ {
+  "nokta": 3,
+  "mesafe_m": 100,
+  "yanal_m": 80,
+  "hata_m": 8.6,
+  "uyari_s": 11.8
+ },
+ {
+  "nokta": 3,
+  "mesafe_m": 100,
+  "yanal_m": 160,
+  "hata_m": 8.5,
+  "uyari_s": 11.7
+ },
+ {
+  "nokta": 3,
+  "mesafe_m": 150,
+  "yanal_m": 40,
+  "hata_m": 8.4,
+  "uyari_s": 12.3
+ },
+ {
+  "nokta": 3,
+  "mesafe_m": 150,
+  "yanal_m": 80,
+  "hata_m": 8.2,
+  "uyari_s": 12.8
+ },
+ {
+  "nokta": 3,
+  "mesafe_m": 150,
+  "yanal_m": 160,
+  "hata_m": 8.6,
+  "uyari_s": 12.7
+ },
+ {
+  "nokta": 3,
+  "mesafe_m": 200,
+  "yanal_m": 40,
+  "hata_m": 8.4,
+  "uyari_s": 13.1
+ },
+ {
+  "nokta": 3,
+  "mesafe_m": 200,
+  "yanal_m": 80,
+  "hata_m": 8.4,
+  "uyari_s": 13.6
+ },
+ {
+  "nokta": 3,
+  "mesafe_m": 200,
+  "yanal_m": 160,
+  "hata_m": 8.9,
+  "uyari_s": 13.5
+ },
+ {
+  "nokta": 3,
+  "mesafe_m": 300,
+  "yanal_m": 40,
+  "hata_m": 9.7,
+  "uyari_s": 13.7
+ },
+ {
+  "nokta": 3,
+  "mesafe_m": 300,
+  "yanal_m": 80,
+  "hata_m": 9.5,
+  "uyari_s": 13.7
+ },
+ {
+  "nokta": 3,
+  "mesafe_m": 300,
+  "yanal_m": 160,
+  "hata_m": 9.6,
+  "uyari_s": 13.7
+ },
+ {
+  "nokta": 4,
+  "mesafe_m": 50,
+  "yanal_m": 40,
+  "hata_m": 16.7,
+  "uyari_s": 11.1
+ },
+ {
+  "nokta": 4,
+  "mesafe_m": 50,
+  "yanal_m": 80,
+  "hata_m": 12.8,
+  "uyari_s": 11.2
+ },
+ {
+  "nokta": 4,
+  "mesafe_m": 50,
+  "yanal_m": 160,
+  "hata_m": 8.5,
+  "uyari_s": 11.5
+ },
+ {
+  "nokta": 4,
+  "mesafe_m": 100,
+  "yanal_m": 40,
+  "hata_m": 9.8,
+  "uyari_s": 12.0
+ },
+ {
+  "nokta": 4,
+  "mesafe_m": 100,
+  "yanal_m": 80,
+  "hata_m": 8.3,
+  "uyari_s": 12.3
+ },
+ {
+  "nokta": 4,
+  "mesafe_m": 100,
+  "yanal_m": 160,
+  "hata_m": 8.5,
+  "uyari_s": 12.6
+ },
+ {
+  "nokta": 4,
+  "mesafe_m": 150,
+  "yanal_m": 40,
+  "hata_m": 8.1,
+  "uyari_s": 12.8
+ },
+ {
+  "nokta": 4,
+  "mesafe_m": 150,
+  "yanal_m": 80,
+  "hata_m": 7.8,
+  "uyari_s": 13.2
+ },
+ {
+  "nokta": 4,
+  "mesafe_m": 150,
+  "yanal_m": 160,
+  "hata_m": 8.2,
+  "uyari_s": 13.7
+ },
+ {
+  "nokta": 4,
+  "mesafe_m": 200,
+  "yanal_m": 40,
+  "hata_m": 8.1,
+  "uyari_s": 13.8
+ },
+ {
+  "nokta": 4,
+  "mesafe_m": 200,
+  "yanal_m": 80,
+  "hata_m": 7.9,
+  "uyari_s": 13.7
+ },
+ {
+  "nokta": 4,
+  "mesafe_m": 200,
+  "yanal_m": 160,
+  "hata_m": 8.4,
+  "uyari_s": 14.0
+ },
+ {
+  "nokta": 4,
+  "mesafe_m": 300,
+  "yanal_m": 40,
+  "hata_m": 9.2,
+  "uyari_s": 13.8
+ },
+ {
+  "nokta": 4,
+  "mesafe_m": 300,
+  "yanal_m": 80,
+  "hata_m": 9.0,
+  "uyari_s": 13.9
+ },
+ {
+  "nokta": 4,
+  "mesafe_m": 300,
+  "yanal_m": 160,
+  "hata_m": 9.2,
+  "uyari_s": 14.2
+ }
+]

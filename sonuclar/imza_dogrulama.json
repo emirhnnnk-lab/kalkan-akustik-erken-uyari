@@ -1,0 +1,26 @@
+{
+ "1": {
+  "imza_dogru_%": 70,
+  "imza_±1_%": 90,
+  "imzasiz_dogru_%": 55,
+  "imzasiz_±1_%": 75
+ },
+ "2": {
+  "imza_dogru_%": 15,
+  "imza_±1_%": 80,
+  "imzasiz_dogru_%": 15,
+  "imzasiz_±1_%": 40
+ },
+ "3": {
+  "imza_dogru_%": 10,
+  "imza_±1_%": 60,
+  "imzasiz_dogru_%": 5,
+  "imzasiz_±1_%": 25
+ },
+ "4": {
+  "imza_dogru_%": 15,
+  "imza_±1_%": 60,
+  "imzasiz_dogru_%": 25,
+  "imzasiz_±1_%": 55
+ }
+}

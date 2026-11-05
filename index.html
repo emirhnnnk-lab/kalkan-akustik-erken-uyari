@@ -1,0 +1,1114 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kalkan Önleme Simülatörü</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  color-scheme: dark;
+  --bg:#0b1316; --panel:#111c21; --panel2:#15232a; --line:#223640; --text:#d5e1e3; --muted:#7c9399;
+  --amber:#f2a93b; --threat:#ff5a4e; --track:#5cc8e0; --paint:#e052d2; --ok:#6fcf8e; --soldier:#cfe3d4;
+  --f-disp:"Chakra Petch", "Segoe UI", system-ui, sans-serif;
+  --f-body:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:var(--f-body);font-size:15px;line-height:1.55;margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:20px 60px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:14px}
+h1{font-family:var(--f-disp);font-weight:700;font-size:clamp(24px,4vw,34px);letter-spacing:.02em;margin:0;line-height:1.1}
+h1 small{display:block;font-size:12px;font-weight:500;letter-spacing:.18em;color:var(--amber);text-transform:uppercase;margin-bottom:4px}
+.sub{color:var(--muted);max-width:60ch;margin:6px 0 0}
+nav.tabs{display:flex;gap:4px;flex-wrap:wrap;margin:16px 0}
+nav.tabs button{font-family:var(--f-disp);font-weight:600;letter-spacing:.06em;font-size:14px;background:transparent;color:var(--muted);border:1px solid var(--line);padding:8px 14px;cursor:pointer}
+nav.tabs button[aria-selected="true"]{color:var(--bg);background:var(--amber);border-color:var(--amber)}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--track);outline-offset:2px}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px}
+@media (max-width:900px){.grid{grid-template-columns:1fr}}
+.stage{position:relative;background:#081014;border:1px solid var(--line)}
+canvas#scene{display:block;width:100%;height:auto;aspect-ratio:4/3;max-width:100%}
+.side{display:flex;flex-direction:column;gap:14px}
+.box{background:var(--panel);border:1px solid var(--line);padding:14px}
+.box h3{font-family:var(--f-disp);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 10px;font-weight:600}
+.ctl{display:grid;grid-template-columns:1fr auto;gap:8px 10px;align-items:center;font-size:14px}
+.ctl select,.ctl input[type=range]{font-family:var(--f-mono);background:var(--panel2);color:var(--text);border:1px solid var(--line);padding:4px}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.btn{font-family:var(--f-disp);font-weight:600;letter-spacing:.05em;background:var(--panel2);color:var(--text);border:1px solid var(--line);padding:8px 12px;cursor:pointer;font-size:14px}
+.btn.primary{background:var(--amber);color:#1a1205;border-color:var(--amber)}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.stat{background:var(--panel2);padding:8px 10px}
+.stat b{display:block;font-family:var(--f-mono);font-size:22px;font-weight:500;font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:var(--muted)}
+.log{font-family:var(--f-mono);font-size:12px;height:190px;overflow:auto;background:#0a1216;border:1px solid var(--line);padding:8px;line-height:1.5}
+.log .k{color:var(--ok)} .log .x{color:var(--threat)} .log .l{color:var(--amber)} .log .t{color:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted);padding:8px 10px;border-top:1px solid var(--line)}
+.legend i{display:inline-block;width:10px;height:10px;margin-right:5px;vertical-align:-1px}
+.charts{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:900px){.charts{grid-template-columns:1fr}}
+.chart svg{width:100%;height:auto;display:block}
+.chart p{color:var(--muted);font-size:14px;margin:8px 0 0}
+.prog{height:6px;background:var(--panel2);margin-top:10px}.prog div{height:100%;width:0;background:var(--amber);transition:width .2s}
+.doc{max-width:74ch}
+.doc h2{font-family:var(--f-disp);font-size:22px;margin:32px 0 8px;text-wrap:balance}
+.doc h2:first-child{margin-top:8px}
+.doc p,.doc li{color:#c3d1d3}
+.doc strong{color:var(--text)}
+.doc .say{border-left:3px solid var(--amber);background:var(--panel);padding:10px 14px;margin:10px 0;font-style:italic;color:var(--text)}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--f-disp);letter-spacing:.06em;color:var(--muted);font-weight:600}
+td.n{font-family:var(--f-mono);white-space:nowrap}
+.note{font-size:13px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.prog div{transition:none}}
+
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px}
+@media (max-width:900px){.layout{grid-template-columns:1fr}}
+.panels{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:560px){.panels{grid-template-columns:1fr}}
+.pn{background:var(--panel);border:1px solid var(--line)}
+.pn canvas{display:block;width:100%;height:auto;aspect-ratio:4/3;image-rendering:pixelated;background:#050a0c}
+.pn .cap{padding:8px 10px}
+.pn .cap b{font-family:var(--f-disp);font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);font-weight:600}
+.pn .cap p{margin:2px 0 0;font-size:13px;color:var(--muted)}
+.lock{font-family:var(--f-disp);font-weight:700;letter-spacing:.1em;font-size:18px;padding:6px 10px;text-align:center}
+.raster canvas{width:100%;height:auto;display:block;background:#050a0c;border:1px solid var(--line)}
+#p-bug .doc{margin-top:28px}
+.pn.wide{grid-column:1/-1}
+.pn.wide canvas{aspect-ratio:640/220}
+.kb{display:inline-block;font-family:var(--f-mono);font-size:9.5px;letter-spacing:.06em;padding:2px 5px;margin-left:6px;vertical-align:2px;border:1px solid currentColor;font-weight:600}
+.kb.r{color:var(--ok)}.kb.s{color:var(--track)}.kb.k{color:var(--muted)}
+nav.tabs button[aria-selected="true"] .kb{color:var(--bg)}
+.kbleg{font-size:12.5px;color:var(--muted);margin:-8px 0 14px}
+.bugs{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-bottom:12px}
+.bugs .box p{margin:0;font-size:13px;color:var(--muted)}.bugs .box b{color:var(--text)}
+</style>
+
+<div class="wrap">
+<header>
+  <div>
+    <h1><small>Piyade anti-FPV · dijital prototip v0.1</small>Kalkan Önleme Simülatörü</h1>
+    <p class="sub">4 kişilik manga, sırtta uyuyan önleyiciler, akustik ağ ile tespit. Başarı ölçütü: önleyicinin hedefe 1,5 m'den yakın geçmesi (testte boya kapsülüyle işaretleme).</p>
+  </div>
+</header>
+
+<nav class="tabs" role="tablist">
+  <button role="tab" id="tab-data" aria-selected="false" data-p="data">Gerçek veri <span class="kb r">GERÇEK VERİ</span></button>
+  <button role="tab" id="tab-ikiz" aria-selected="false" data-p="ikiz">Dijital ikiz (canlı ölçüm) <span class="kb r">GERÇEK VERİ</span></button>
+  <button role="tab" id="tab-ear" aria-selected="false" data-p="ear">Kulak (akustik) <span class="kb s">SİMÜLASYON</span></button>
+  <button role="tab" id="tab-net" aria-selected="false" data-p="net">Ağ <span class="kb s">SİMÜLASYON</span></button>
+  <button role="tab" id="tab-sim" aria-selected="true" data-p="sim">Canlı senaryo <span class="kb s">SİMÜLASYON</span></button>
+  <button role="tab" id="tab-hud" aria-selected="false" data-p="hud">Vizör <span class="kb k">KAVRAM</span></button>
+  <button role="tab" id="tab-karar" aria-selected="false" data-p="karar">Olay mesajı + Dur kuralı <span class="kb k">KAVRAM</span></button>
+  <button role="tab" id="tab-bug" aria-selected="false" data-p="bug">Böcek beyni: sinek + yusufçuk <span class="kb s">SİMÜLASYON</span></button>
+  <button role="tab" id="tab-ormia" aria-selected="false" data-p="ormia">Ormia kulağı (yön bulma) <span class="kb s">SİMÜLASYON</span></button>
+  <button role="tab" id="tab-civ" aria-selected="false" data-p="civ">Sivil koruma <span class="kb s">SİMÜLASYON</span></button>
+  <button role="tab" id="tab-mc" aria-selected="false" data-p="mc">Monte Carlo verisi <span class="kb s">SİMÜLASYON</span></button>
+</nav>
+<p class="kbleg"><span class="kb r">GERÇEK VERİ</span> gerçek ses kayıtlarında, görülmemiş test kümesinde ölçüldü · <span class="kb s">SİMÜLASYON</span> fizik modelinden, parametreler varsayım · <span class="kb k">KAVRAM</span> arayüz tasarımı</p>
+
+<section id="p-sim">
+  <div class="grid">
+    <div class="stage">
+      <canvas id="scene" width="960" height="720" aria-label="Kuşbakışı senaryo görünümü"></canvas>
+      <div class="legend">
+        <span><i style="background:var(--soldier)"></i>Asker</span>
+        <span><i style="background:var(--threat)"></i>FPV (gerçek)</span>
+        <span><i style="background:var(--track)"></i>Ağın tahmini (iz)</span>
+        <span><i style="background:var(--amber)"></i>Önleyici</span>
+        <span><i style="background:var(--paint)"></i>Boya isabeti</span>
+      </div>
+    </div>
+    <div class="side">
+      <div class="box">
+        <h3>Senaryo</h3>
+        <div class="ctl">
+          <label for="nFpv">FPV sayısı (sürü)</label>
+          <select id="nFpv"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option><option>6</option></select>
+          <label for="guid">Önleyici güdümü</label>
+          <select id="guid"><option value="pn" selected>Önünü kesme (PN)</option><option value="pursuit">Kovalama</option><option value="bug">Böcek beyni (SNN çıktısı)</option></select>
+          <label for="net">Manga ağı</label>
+          <select id="net"><option value="on" selected>Aktif</option><option value="off">Koptu</option></select>
+          <label for="evade">FPV kaçış manevrası</label>
+          <select id="evade"><option value="on" selected>Var</option><option value="off">Yok</option></select>
+          <label for="spd">Oynatma hızı</label>
+          <input id="spd" type="range" min="0.1" max="1.5" step="0.05" value="0.6">
+          <label for="zoom">Görünüm</label>
+          <select id="zoom"><option value="1">Geniş (600 m)</option><option value="2.6">Yakın (230 m)</option></select>
+        </div>
+        <div class="btns">
+          <button class="btn primary" id="go">▶ Yeni saldırı</button>
+          <button class="btn" id="pause">Duraklat</button>
+        </div>
+      </div>
+      <div class="box">
+        <h3>Sonuç</h3>
+        <div class="stats">
+          <div class="stat"><b id="sKill">0</b><span>önlenen FPV</span></div>
+          <div class="stat"><b id="sLeak">0</b><span>sızan FPV</span></div>
+          <div class="stat"><b id="sTube">0</b><span>harcanan tüp</span></div>
+          <div class="stat"><b id="sTime">0.0</b><span>saniye</span></div>
+        </div>
+      </div>
+      <div class="box">
+        <h3>Olay kaydı</h3>
+        <div class="log" id="log"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="p-bug" hidden>
+<div class="bugs">
+  <div class="box"><h3>Yusufçuk · avcı</h3><p><b>STMD nöronları</b> gökyüzündeki küçük hareketli noktayı seçer. Yusufçuk avını kovalamaz, <b>önünü keser</b>: avların ~%95'ini yakalar. Önleyicinin hedef kilidi ve güdümü buradan.</p></div>
+  <div class="box"><h3>Sinek · denge</h3><p><b>T4/T5 nöronları</b> tüm görüntünün kaymasını ölçer, yani "ben mi hareket ediyorum, hedef mi?" sorusunu cevaplar. Önleyici kendi sarsıntısını hedeften ayırır.</p></div>
+  <div class="box"><h3>Çekirge ve sinek · çarpma alarmı</h3><p><b>LGMD / LPLC2</b> üzerine doğru büyüyen cismi fark eder. Çarpışma rotasındaki hedef görüntüde kıpırdamaz, sadece büyür. "Çarpmaya kaç saniye" (τ) buradan.</p></div>
+</div>
+<div class="layout">
+  <div>
+    <div class="panels">
+      <div class="pn"><canvas id="cCam" width="320" height="240"></canvas><div class="cap"><b>1 · Kamera</b></div></div>
+      <div class="pn"><canvas id="cDvs" width="320" height="240"></canvas><div class="cap"><b>2 · Olay kamerası (DVS)</b></div></div>
+      <div class="pn"><canvas id="cStmd" width="320" height="240"></canvas><div class="cap"><b>3 · STMD nöronları (yusufçuk)</b></div></div>
+      <div class="pn"><canvas id="cFlow" width="320" height="240"></canvas><div class="cap"><b>4 · T4/T5 geniş alan hareketi (sinek)</b></div></div>
+      <div class="pn wide"><canvas id="cLoom" width="640" height="220"></canvas><div class="cap"><b>5 · Looming nöronu (çekirge LGMD / sinek LPLC2)</b></div></div>
+    </div>
+  </div>
+  <div class="side">
+    <div class="box">
+      <h3>Koşullar</h3>
+      <div class="ctl">
+        <label for="mode">Senaryo</label><select id="mode"><option value="free">Serbest takip</option><option value="loom">Yaklaşma (looming)</option></select>
+        <label for="bgv">Önleyicinin kendi hareketi</label><input id="bgv" type="range" min="0" max="1.4" step="0.05" value="0.6">
+        <label for="clut">Arka plan</label><select id="clut"><option value="1" selected>Karmaşık (orman)</option><option value="0.35">Sade (gökyüzü)</option></select>
+        <label for="tsz">Hedef boyutu</label><select id="tsz"><option value="1.5">1,5 px (uzak)</option><option value="2.5" selected>2,5 px</option><option value="4">4 px</option><option value="9">9 px (çok yakın)</option></select>
+        <label for="nz">Sensör gürültüsü</label><select id="nz"><option value="0">Yok</option><option value="0.004" selected>Az</option><option value="0.015">Çok</option></select>
+        <label for="tsp">Hedef hızı</label><input id="tsp" type="range" min="0.3" max="2" step="0.05" value="1">
+      </div>
+      <div class="btns"><button class="btn primary" id="rst">Sahneyi sıfırla</button></div>
+    </div>
+    <div class="box">
+      <h3>Durum</h3>
+      <div class="lock" id="lock">ARANIYOR</div>
+      <div class="stats" style="margin-top:8px">
+        <div class="stat"><b id="mErr">–</b><span>ort. konum hatası (px)</span></div>
+        <div class="stat"><b id="mLock">–</b><span>kilitli zaman %</span></div>
+        <div class="stat"><b id="mEv">–</b><span>aktif piksel % (seyreklik)</span></div>
+        <div class="stat"><b id="mSp">–</b><span>STMD spike / adım</span></div>
+        <div class="stat"><b id="mTau">–</b><span>τ tahmini (s)</span></div>
+        <div class="stat"><b id="mTauE">–</b><span>τ hatası % (yaklaşmada)</span></div>
+      </div>
+      <div class="raster"><h3 style="margin:12px 0 6px">Yön nöronları · spike rasteri</h3><canvas id="cRas" width="300" height="128"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+</section>
+
+<section id="p-ear" hidden>
+  <div class="layout">
+    <div>
+      <div class="panels">
+        <div class="pn"><canvas id="eSpec" width="320" height="240"></canvas><div class="cap"><b>Spektrum</b></div></div>
+        <div class="pn"><canvas id="ePol" width="320" height="240"></canvas><div class="cap"><b>Yön haritası</b></div></div>
+        <div class="pn wide"><canvas id="eErr" width="640" height="200"></canvas><div class="cap"><b>Yön hatası · zaman</b></div></div>
+      </div>
+    </div>
+    <div class="side">
+      <div class="box">
+        <h3>Koşullar</h3>
+        <div class="ctl">
+          <label for="eOn">Dron</label><select id="eOn"><option value="1" selected>Var</option><option value="0">Yok</option></select>
+          <label for="eSnr">Sinyal / gürültü (dB)</label><input id="eSnr" type="range" min="-25" max="10" step="1" value="-10">
+          <label for="eNz">Gürültü</label><select id="eNz"><option value="wind">Rüzgar</option><option value="battle" selected>Rüzgar + atış</option></select>
+          <label for="eD">Mikrofon aralığı</label><select id="eD"><option value="0.1">10 cm</option><option value="0.2" selected>20 cm</option><option value="0.3">30 cm</option></select>
+          <label for="eMv">Dron hareketi</label><select id="eMv"><option value="1" selected>Dönüyor</option><option value="0">Sabit</option></select>
+        </div>
+        <div class="btns"><button class="btn primary" id="eRst">Sıfırla</button></div>
+      </div>
+      <div class="box">
+        <h3>Durum</h3>
+        <div class="lock" id="eDet">–</div>
+        <div class="stats" style="margin-top:8px">
+          <div class="stat"><b id="eE1">–</b><span>hata, düz SRP (°)</span></div>
+          <div class="stat"><b id="eE2">–</b><span>hata, harmonik maske (°)</span></div>
+          <div class="stat"><b id="eF0">–</b><span>pervane frekansı (Hz)</span></div>
+          <div class="stat"><b id="eFa">–</b><span>tespit / yanlış alarm %</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="p-hud" hidden>
+  <div class="grid">
+    <div class="stage"><canvas id="hud" width="960" height="540" style="display:block;width:100%;height:auto;aspect-ratio:16/9;max-width:100%;cursor:grab;touch-action:none" aria-label="Vizör ekranı"></canvas></div>
+    <div class="side"><div class="box"><h3>Vizör</h3><div class="ctl">
+      <label for="hN">Tehdit sayısı</label><select id="hN"><option>1</option><option selected>3</option><option>5</option></select>
+      <label for="hNet">Manga ağı</label><select id="hNet"><option value="on" selected>Aktif</option><option value="off">Koptu</option></select>
+      <label for="hSp">Hız</label><input id="hSp" type="range" min="0.2" max="2" step="0.1" value="1">
+    </div><div class="btns"><button class="btn primary" id="hGo">Yeni tehditler</button></div></div></div>
+  </div>
+</section>
+
+<section id="p-data" hidden>
+  <div class="charts">
+    <div class="box chart"><h3>Dedektör gelişimi · AUC</h3><div id="dv1"></div></div>
+    <div class="box chart"><h3>Genelleme · görülmemiş açık alan</h3><div id="dv2"></div></div>
+    <div class="box chart" style="grid-column:1/-1"><h3>Ağ oylaması · tespit ve yanlış alarm</h3><div id="dv3"></div></div>
+    <div class="box chart" style="grid-column:1/-1"><h3>Sürü sayma · doğru sayım %</h3><div id="dv4"></div></div>
+  </div>
+  <p class="note" style="margin-top:12px">Veri: saraalemadi/DroneAudioDataset (atıf), DroneDetectionThesis (CC0), DADS (MIT). 0,5 = yazı tura, 1 = kusursuz.</p>
+</section>
+
+<section id="p-ikiz" hidden>
+  <div class="box" style="margin-bottom:16px">
+    <h3>Bu sekme ne yapıyor?</h3>
+    <p class="note">Yukarıdaki "Gerçek veri" sekmesi önceden hesaplanmış sayıları çizer. <b>Bu sekme ise gerçek dijital ikizdir:</b> tarayıcı, diskteki gerçek ses kayıtlarını (160 eğitim + 200 test, toplam 360 <code>.wav</code>) tek tek okur, her birinin beyazlatılmış harmonik tarak skorunu <b>o an hesaplar</b>, eşiği eğitim kümesinden seçer ve AUC'yi görülmemiş test kümesinde canlı ölçer. Gömülü sabit sayı yoktur. (Python <code>ayrik_test.py</code> ile aynı matematik — karşılaştırma için beklenen değerler aşağıda.)</p>
+    <div class="btns"><button class="btn primary" id="ikGo">Gerçek kayıtlarda canlı ölç</button></div>
+    <p class="note" id="ikProg" style="margin:10px 0 0">Hazır. Çalıştırmak için düğmeye bas (yerel sunucu üzerinden açılmalı).</p>
+  </div>
+  <div class="charts">
+    <div class="box"><h3>Canlı ölçülen sonuç</h3><div class="stats">
+      <div class="stat"><b id="ikAUC">–</b><span>test AUC (görülmemiş kayıtlar)</span></div>
+      <div class="stat"><b id="ikTh">–</b><span>eşik (eğitimden, dB)</span></div>
+      <div class="stat"><b id="ikDet">–</b><span>tespit %</span></div>
+      <div class="stat"><b id="ikFa">–</b><span>yanlış alarm %</span></div>
+    </div>
+    <p class="note" id="ikCmp" style="margin:10px 0 0">Beklenen (Python): AUC 0,888 · eşik 5,85 · tespit %88 · yanlış alarm %22.</p></div>
+    <div class="box chart"><h3>Skor dağılımı · test kümesi</h3><div id="ikHist"></div>
+    <p class="note">Mavi = dron kayıtları, kırmızı = dron olmayan. Dikey çizgi = eğitimden seçilen eşik. Ayrıştıkça AUC yükselir.</p></div>
+  </div>
+</section>
+
+<section id="p-net" hidden>
+  <div class="grid">
+    <div class="stage"><canvas id="nc" width="960" height="720" style="display:block;width:100%;height:auto;aspect-ratio:4/3;max-width:100%" aria-label="Ağ geometrisi"></canvas>
+      <div class="legend"><span><i style="background:var(--soldier)"></i>Asker</span><span><i style="background:var(--ok)"></i>İleri dinleme noktası</span><span><i style="background:var(--threat)"></i>Dron (gerçek)</span><span><i style="background:var(--track)"></i>Tahminler (200 deneme)</span></div></div>
+    <div class="side">
+      <div class="box"><h3>Ağ</h3><div class="ctl">
+        <label for="nFwd">İleri dinleme noktası</label><select id="nFwd"><option value="0">Yok</option><option value="2" selected>2 adet (150 m)</option></select>
+        <label for="nSpread">Manga yayılımı</label><select id="nSpread"><option value="1" selected>45 m</option><option value="2.7">120 m</option></select>
+        <label for="nLoss">Paket kaybı</label><select id="nLoss"><option value="0">%0</option><option value="0.3" selected>%30</option><option value="0.6">%60</option></select>
+        <label for="nSig">Yön hatası</label><select id="nSig"><option value="1">1°</option><option value="3" selected>3°</option><option value="6">6°</option></select>
+        <label for="nR">Dron mesafesi</label><input id="nR" type="range" min="60" max="340" step="10" value="250">
+        <label for="nB">Dron yönü</label><input id="nB" type="range" min="-80" max="80" step="5" value="20">
+      </div></div>
+      <div class="box"><h3>Sonuç</h3><div class="stats">
+        <div class="stat"><b id="nE">–</b><span>medyan konum hatası (m)</span></div>
+        <div class="stat"><b id="nV">–</b><span>konum bulunan deneme %</span></div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<section id="p-civ" hidden>
+  <div class="grid">
+    <div class="stage"><canvas id="cv2" width="960" height="720" style="display:block;width:100%;height:auto;aspect-ratio:4/3;max-width:100%" aria-label="Sivil tesis koruma haritası"></canvas>
+      <div class="legend"><span><i style="background:var(--ok)"></i>Akustik düğüm</span><span><i style="background:var(--soldier)"></i>Korunan tesis</span><span><i style="background:var(--threat)"></i>Dron rotası (fark edilmedi)</span><span><i style="background:var(--amber)"></i>Dron rotası (fark edildi)</span><span><i style="background:var(--track)"></i>Duyma alanı</span></div></div>
+    <div class="side">
+      <div class="box"><h3>Senaryo</h3><div class="ctl">
+        <label for="cSc">Tesis</label><select id="cSc"><option value="enerji" selected>Enerji santrali / trafo</option><option value="hava">Havalimanı pisti</option><option value="cez">Cezaevi (kaçak eşya)</option><option value="stad">Stadyum / miting</option></select>
+        <label for="cN">Düğüm sayısı</label><select id="cN"><option>4</option><option selected>8</option><option>12</option><option>16</option></select>
+        <label for="cR">Duyma menzili</label><select id="cR"><option value="100">100 m (sessiz ticari dron)</option><option value="150" selected>150 m</option><option value="250">250 m (FPV / yarış dronu)</option></select>
+        <label for="cH">Duyma olasılığı / s</label><select id="cH"><option value="0.5" selected>%50 (açık alan ölçümü)</option><option value="0.8">%80 (saha verisiyle hedef)</option></select>
+        <label for="cL">Düğüm yerleşimi</label><select id="cL"><option value="ring" selected>Tel örgü boyunca</option><option value="out">Dışarı itilmiş halka (+60 m)</option></select>
+      </div><div class="btns"><button class="btn primary" id="cGo">500 saldırı dene</button></div></div>
+      <div class="box"><h3>Sonuç</h3><div class="stats">
+        <div class="stat"><b id="cDet">–</b><span>tele ulaşmadan fark edilen %</span></div>
+        <div class="stat"><b id="cWarn">–</b><span>ortalama uyarı süresi (s)</span></div>
+        <div class="stat"><b id="cCost">–</b><span>donanım (bin TL, kaba)</span></div>
+        <div class="stat"><b id="cNeed">–</b><span>güvenlik ekibinin tepki süresi</span></div>
+      </div><p class="note" id="cNote" style="margin:10px 0 0"></p></div>
+    </div>
+  </div>
+</section>
+
+<section id="p-karar" hidden>
+  <div class="box" style="margin-bottom:16px">
+    <h3>Olay mesajı ve "Dur kuralı" — etik mimaride</h3>
+    <p class="note">Her düğüm (asker kulağı, gözcü dron, ileri nokta) bir tehdit görünce aynı <b>26 baytlık</b> mesajı üretir. En önemlisi karar mantığıdır: <b>tehdidin yanında zarar görebilecek bir canlı varsa, sistem ne olursa olsun DURUR.</b> Ayarları değiştir; kararın canlı hesaplandığını gör. (Çalışan <code>firmware/olay_mesaji.cpp</code> ile aynı mantık.)</p>
+  </div>
+  <div class="charts">
+    <div class="box"><h3>Senaryo</h3><div class="ctl">
+      <label for="kSinif">Hedef sınıfı</label>
+      <select id="kSinif"><option value="0">bilinmiyor</option><option value="1">kuş (canlı — tehdit değil)</option><option value="2">ticari dron</option><option value="3" selected>FPV dron (asıl tehdit)</option><option value="4">sabit kanat</option></select>
+      <label for="kCanli">Yakında canlı durumu</label>
+      <select id="kCanli"><option value="0" selected>yakında canlı yok</option><option value="1">korunan canlı menzilde</option><option value="2">CANLI çarpma hattında (risk)</option></select>
+      <label for="kGuv">Güven: <span id="kGuvV">90</span>%</label>
+      <input id="kGuv" type="range" min="0" max="100" value="90">
+      <label for="kTau">Çarpmaya kalan süre τ: <span id="kTauV">6.0</span> s (0 = yok)</label>
+      <input id="kTau" type="range" min="0" max="12" step="0.5" value="6">
+    </div></div>
+    <div class="box"><h3>Sistemin kararı</h3>
+      <div id="kBanner" style="padding:16px;border-radius:8px;font-weight:700;font-size:18px;text-align:center;margin-bottom:10px">–</div>
+      <p class="note" id="kAcik"></p>
+      <h3 style="margin-top:14px">Giden mesaj (26 bayt)</h3>
+      <div id="kMsg" class="note" style="font-family:'IBM Plex Mono',monospace;line-height:1.7"></div>
+    </div>
+  </div>
+</section>
+
+<section id="p-ormia" hidden>
+  <div class="box" style="margin-bottom:16px">
+    <h3>Ormia kulağı — minik dizi, büyük hassasiyet</h3>
+    <p class="note">İki mikrofon çok yakınsa (0,5 mm), sesin ikisine varış zaman farkı ~1 mikrosaniyedir; ölçmesi neredeyse imkânsız, yön hatası devasa olur. Ormia ochracea sineği kulaklarını esnek bir köprüyle (mekanik kaldıraç) <b>birbirine bağlayarak</b> bu minik zaman farkını ölçülebilir bir <b>genlik (ses yüksekliği) farkına</b> çevirir. Aşağıda aynı 0,5 mm dizi, bağlantısız ve Ormia bağlantılı halde canlı karşılaştırılıyor. (Çalışan <code>firmware/ormia_kulak.cpp</code> fiziğinin tarayıcı sürümü.)</p>
+  </div>
+  <div class="charts">
+    <div class="box"><h3>Ayar</h3><div class="ctl">
+      <label for="oAci">Gerçek ses yönü: <span id="oAciV">30</span>°</label>
+      <input id="oAci" type="range" min="-70" max="70" step="5" value="30">
+      <label for="oGur">Ölçüm gürültüsü: <span id="oGurV">5</span>%</label>
+      <input id="oGur" type="range" min="0" max="20" step="1" value="5">
+    </div><p class="note" id="oDurum">Hesaplanıyor…</p></div>
+    <div class="box"><h3>Tahmin edilen yön</h3><div class="stats">
+      <div class="stat"><b id="oBagli">–</b><span>Ormia bağlantılı (0,5 mm) tahmini</span></div>
+      <div class="stat"><b id="oSerbest">–</b><span>bağlantısız (0,5 mm) tahmini</span></div>
+      <div class="stat"><b id="oMild">–</b><span>genlik farkı (mILD) ipucu</span></div>
+      <div class="stat"><b id="oHata">–</b><span>Ormia yön hatası</span></div>
+    </div>
+    <p class="note">Bağlantısız dizi genlik ipucu üretemez (≈0) → yön bulamaz. Ormia bağlantısı güçlü bir ipucu yaratır → minik dizi büyük dizi gibi hassas olur. Rakamlar idealize (saf ton); gerçek dünyada birkaç derece.</p></div>
+  </div>
+</section>
+
+<section id="p-mc" hidden>
+  <div class="box" style="margin-bottom:16px">
+    <h3>Binlerce saldırı, rastgele koşullar</h3>
+    <p style="margin:0 0 4px;max-width:70ch">Her nokta 200 ayrı saldırının ortalaması: FPV yönü, başlangıç anı, hedef asker, sensör gürültüsü ve kaçış manevraları her denemede rastgele değişiyor. Toplamda 10.200 saldırı tarayıcında birkaç saniyede çalışır.</p>
+    <div class="btns"><button class="btn primary" id="mcGo">Monte Carlo'yu çalıştır</button><span class="note" id="mcStat" style="align-self:center"></span></div>
+    <div class="prog"><div id="mcBar"></div></div>
+  </div>
+  <div class="charts">
+    <div class="box chart"><h3>Sürü büyüklüğü → manga kayıpsız kalma oranı</h3><div id="c1"></div></div>
+    <div class="box chart"><h3>FPV hızı → önleme oranı (tek FPV)</h3><div id="c2"></div></div>
+  </div>
+</section>
+
+
+</div>
+
+<script>
+(function(){
+"use strict";
+// ---------- parametreler ----------
+const P={fpvSpeed:35,detectR:350,sigNet:3*Math.PI/180,pHear:0.5,soloRangeErr:0.15,launchR:170,
+  icLaunch:18,icMax:45,icAcc:25,icLatMax:80,icLife:6,seekerR:80,killR:1.5,N:4,dt:0.02,tubes:10};
+const SOLDIERS=[[-22,0],[-7,4],[8,-3],[23,2]];
+
+function rng(seed){let a=seed>>>0;return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function gauss(r){let u=0,v=0;while(!u)u=r();while(!v)v=r();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+const hyp=Math.hypot;
+
+// ---------- simülasyon ----------
+function createSim(o,seed){
+  const r=rng(seed);
+  const s={o,r,t:0,step:0,events:[],soldiers:SOLDIERS.map((p,i)=>({id:i,x:p[0],y:p[1],tubes:P.tubes,hit:false})),
+    fpvs:[],ics:[],kills:0,leaks:0,tubesUsed:0,done:false,paints:[]};
+  for(let i=0;i<o.n;i++){
+    const b=(-80+160*r())*Math.PI/180, R=480+80*r();
+    const tgt=Math.floor(r()*4);
+    s.fpvs.push({id:i,x:R*Math.sin(b),y:R*Math.cos(b),vx:0,vy:0,t0:r()*(o.n>1?4:0.5),tgt,phase:r()*6.28,
+      speed:o.fpvSpeed||P.fpvSpeed,alive:true,active:false,jink:0,jinkSide:1,jinkCd:0,
+      trk:null,trail:[],engaged:0});
+  }
+  return s;
+}
+function log(s,cls,msg){s.events.push({t:s.t,cls,msg});}
+
+function triangulate(s,f,obs){
+  // yön çizgilerinin en küçük kareler kesişimi
+  let a11=0,a12=0,a22=0,b1=0,b2=0;
+  for(const sd of obs){
+    const th=Math.atan2(f.x-sd.x,f.y-sd.y)+gauss(s.r)*s.o.sig;
+    const dx=Math.sin(th),dy=Math.cos(th),nx=-dy,ny=dx;
+    a11+=nx*nx;a12+=nx*ny;a22+=ny*ny;const c=nx*sd.x+ny*sd.y;b1+=nx*c;b2+=ny*c;
+  }
+  const det=a11*a22-a12*a12; if(Math.abs(det)<1e-3) return null;
+  return {x:(a22*b1-a12*b2)/det,y:(a11*b2-a12*b1)/det};
+}
+
+function sense(s){
+  // Gerçek veriye göre kulak: açık alanda tek asker, 1 saniyelik pencerede dronu ~%50 ihtimalle duyuyor (acik_alan_uctan_uca.py).
+  // Her asker-dron çifti için "duydu / duymadı" kararı saniyede bir yeniden çekilir.
+  s.senseN=(s.senseN||0)+1; if(!s.hear||s.senseN%10===1){s.hear={};}
+  const net=s.o.net==="on", dtm=P.dt*5;
+  for(const f of s.fpvs){
+    if(!f.alive||!f.active) continue;
+    const obs=s.soldiers.filter(sd=>!sd.hit&&hyp(f.x-sd.x,f.y-sd.y)<P.detectR&&(s.hear[sd.id+'-'+f.id]??(s.hear[sd.id+'-'+f.id]=s.r()<P.pHear)));
+    let m=null;
+    if(net&&obs.length>=2) m=triangulate(s,f,obs);
+    else if(obs.length>=1){ // tek başına: yön iyi, menzil kötü
+      const sd=obs[0],R=hyp(f.x-sd.x,f.y-sd.y),e=R*P.soloRangeErr;
+      m={x:f.x+gauss(s.r)*e,y:f.y+gauss(s.r)*e};
+    }
+    if(!m) continue;
+    if(!f.trk){f.trk={x:m.x,y:m.y,vx:0,vy:0,n:1,err:30};log(s,"t",`FPV-${f.id+1} ses ile tespit edildi (${obs.length} asker duydu)`);continue;}
+    const k=f.trk,px=k.x+k.vx*dtm,py=k.y+k.vy*dtm,rx=m.x-px,ry=m.y-py;
+    k.x=px+0.5*rx;k.y=py+0.5*ry;k.vx+=0.25*rx/dtm;k.vy+=0.25*ry/dtm;k.n++;
+    k.err=0.8*k.err+0.2*hyp(k.x-f.x,k.y-f.y);
+  }
+}
+
+function solveAim(px,py,vx,vy,V){
+  const a=vx*vx+vy*vy-V*V,b=2*(px*vx+py*vy),c=px*px+py*py;let t=-1;
+  if(Math.abs(a)<1e-6)t=-c/b;else{const d=b*b-4*a*c;if(d>=0){const t1=(-b-Math.sqrt(d))/(2*a),t2=(-b+Math.sqrt(d))/(2*a);t=Math.min(t1>0?t1:1e9,t2>0?t2:1e9);if(t>1e8)t=-1;}}
+  return t>0?[px+vx*t,py+vy*t]:[px,py];
+}
+function launch(s,sd,f){
+  sd.tubes--;s.tubesUsed++;f.engaged++;
+  const k=f.trk,[ax,ay]=solveAim(k.x-sd.x,k.y-sd.y,k.vx,k.vy,35),L=hyp(ax,ay)||1;
+  s.ics.push({x:sd.x,y:sd.y,vx:ax/L*P.icLaunch,vy:ay/L*P.icLaunch,sp:P.icLaunch,age:0,f,from:sd.id,minD:1e9,done:false,trail:[]});
+  log(s,"l",`Asker-${sd.id+1} fırlattı → FPV-${f.id+1} (kalan tüp ${sd.tubes})`);
+}
+function engage(s){
+  const net=s.o.net==="on";
+  const alive=s.soldiers.filter(sd=>!sd.hit);if(!alive.length)return;
+  const th=s.fpvs.filter(f=>f.alive&&f.trk&&f.trk.n>=3).map(f=>{
+    let dmin=1e9;for(const sd of alive)dmin=Math.min(dmin,hyp(f.trk.x-sd.x,f.trk.y-sd.y));
+    return {f,d:dmin,tti:dmin/Math.max(5,hyp(f.trk.vx,f.trk.vy))};}).sort((a,b)=>a.tti-b.tti);
+  for(const {f,d} of th){
+    if(d>P.launchR) continue;
+    const live=s.ics.filter(ic=>!ic.done&&ic.f===f);
+    if(net){
+      if(live.length) continue;
+      let best=null,bd=1e9;for(const sd of alive){if(sd.tubes<=0)continue;const dd=hyp(f.trk.x-sd.x,f.trk.y-sd.y);if(dd<bd){bd=dd;best=sd;}}
+      if(best&&d>25) launch(s,best,f);
+    }else{
+      for(const sd of alive){
+        if(sd.tubes<=0||live.some(ic=>ic.from===sd.id)) continue;
+        if(hyp(f.x-sd.x,f.y-sd.y)<P.launchR&&hyp(f.x-sd.x,f.y-sd.y)>25) launch(s,sd,f);
+      }
+    }
+  }
+}
+
+function stepSim(s){
+  const dt=P.dt,o=s.o;s.t+=dt;s.step++;
+  for(const f of s.fpvs){
+    if(!f.alive) continue;
+    if(!f.active){if(s.t>=f.t0)f.active=true;else continue;}
+    let tg=s.soldiers[f.tgt];
+    if(tg.hit){let bd=1e9;for(const sd of s.soldiers)if(!sd.hit){const d=hyp(sd.x-f.x,sd.y-f.y);if(d<bd){bd=d;tg=sd;f.tgt=sd.id;}}}
+    if(tg.hit){f.alive=false;continue;}
+    let dx=tg.x-f.x,dy=tg.y-f.y;const D=hyp(dx,dy);dx/=D;dy/=D;
+    const px=-dy,py=dx;let lat=6*Math.sin(2.2*s.t+f.phase)*Math.min(1,D/60);
+    if(o.evade==="on"){
+      f.jinkCd-=dt;
+      if(f.jink<=0&&f.jinkCd<=0&&s.ics.some(ic=>!ic.done&&ic.f===f&&hyp(ic.x-f.x,ic.y-f.y)<35)){f.jink=0.6;f.jinkSide=s.r()<0.5?-1:1;f.jinkCd=1.2;}
+      if(f.jink>0){f.jink-=dt;lat+=16*f.jinkSide;}
+    }
+    let vx=dx*f.speed+px*lat,vy=dy*f.speed+py*lat;const V=hyp(vx,vy);f.vx=vx/V*f.speed;f.vy=vy/V*f.speed;
+    f.x+=f.vx*dt;f.y+=f.vy*dt;
+    if(s.step%5===0){f.trail.push([f.x,f.y]);if(f.trail.length>70)f.trail.shift();}
+    if(hyp(tg.x-f.x,tg.y-f.y)<3){tg.hit=true;f.alive=false;s.leaks++;log(s,"x",`FPV-${f.id+1} Asker-${tg.id+1}'e ulaştı`);s.paints.push({x:tg.x,y:tg.y,t:s.t,bad:true});}
+  }
+  if(s.step%5===0){sense(s);engage(s);}
+  for(const ic of s.ics){
+    if(ic.done) continue;const f=ic.f;
+    if(!f.alive){ic.done=true;continue;}
+    ic.age+=dt;
+    const dTrue=hyp(f.x-ic.x,f.y-ic.y);let tx,ty,tvx,tvy;
+    if(dTrue<P.seekerR){tx=f.x+gauss(s.r)*0.3;ty=f.y+gauss(s.r)*0.3;tvx=f.vx;tvy=f.vy;}
+    else{tx=f.trk.x;ty=f.trk.y;tvx=f.trk.vx;tvy=f.trk.vy;}
+    const rx=tx-ic.x,ry=ty-ic.y,vrx=tvx-ic.vx,vry=tvy-ic.vy,r2=rx*rx+ry*ry;
+    const nx=-ic.vy/ic.sp,ny=ic.vx/ic.sp;let a;
+    if(o.guid==="pn"){const ld=(rx*vry-ry*vrx)/r2,Vc=-(rx*vrx+ry*vry)/Math.sqrt(r2);a=P.N*Math.max(Vc,5)*ld;}
+    else if(o.guid==="bug"){
+      // Böcek beyni: menzil ve kapanış hızı bilinmez. Sadece hedefin görüntüdeki kayma hızı (yön nöronlarının spike oranı).
+      // Model: gerçek görüş hattı dönüşü + nöron gürültüsü, spike sayımı kadar kaba (0,03 rad/s adım), 20 ms gecikme.
+      const ld=(rx*vry-ry*vrx)/r2,noisy=ld+gauss(s.r)*0.04,q=Math.round(noisy/0.03)*0.03;
+      ic.lq=ic.lq||[];ic.lq.push(q);const del=ic.lq.length>1?ic.lq.shift():0;
+      ic.lf=(ic.lf||0)*0.6+0.4*del;
+      // yusufçuk kuralı: görüntüdeki kaymayı sıfırla, kazanç kendi hızınla orantılı; looming (yakın) fazında kazanç artar
+      const near=dTrue<P.seekerR*0.4?1.4:1;a=3.5*near*ic.sp*ic.lf;}
+    else{const err=Math.atan2(ic.vx*ry-ic.vy*rx,ic.vx*rx+ic.vy*ry);a=err*ic.sp*4;}
+    a=Math.max(-P.icLatMax,Math.min(P.icLatMax,a));
+    const ox=ic.x,oy=ic.y,fxo=f.x-f.vx*dt,fyo=f.y-f.vy*dt;
+    ic.vx+=nx*a*dt;ic.vy+=ny*a*dt;ic.sp=Math.min(P.icMax,ic.sp+P.icAcc*dt);
+    const L=hyp(ic.vx,ic.vy);ic.vx=ic.vx/L*ic.sp;ic.vy=ic.vy/L*ic.sp;ic.x+=ic.vx*dt;ic.y+=ic.vy*dt;
+    if(s.step%3===0){ic.trail.push([ic.x,ic.y]);if(ic.trail.length>90)ic.trail.shift();}
+    // adım içi en yakın geçiş
+    const r0x=fxo-ox,r0y=fyo-oy,r1x=f.x-ic.x,r1y=f.y-ic.y,ddx=r1x-r0x,ddy=r1y-r0y,dd=ddx*ddx+ddy*ddy;
+    let u=dd>0?-(r0x*ddx+r0y*ddy)/dd:0;u=Math.max(0,Math.min(1,u));
+    const cpa=hyp(r0x+u*ddx,r0y+u*ddy);ic.minD=Math.min(ic.minD,cpa);
+    if(cpa<P.killR){ic.done=true;f.alive=false;s.kills++;s.paints.push({x:f.x,y:f.y,t:s.t});
+      log(s,"k",`ÖNLENDİ: FPV-${f.id+1}, ${cpa.toFixed(2)} m geçiş, mangaya ${Math.min(...s.soldiers.map(sd=>hyp(sd.x-f.x,sd.y-f.y))).toFixed(0)} m kala`);continue;}
+    const d=hyp(r1x,r1y);
+    if(ic.age>P.icLife||(ic.minD<60&&d>ic.minD+15)){ic.done=true;log(s,"x",`Iska: önleyici FPV-${f.id+1}'i ${ic.minD.toFixed(1)} m ile kaçırdı`);}
+  }
+  if(s.fpvs.every(f=>!f.alive)||s.t>40||s.soldiers.every(sd=>sd.hit)) s.done=true;
+}
+function runHeadless(o,seed){const s=createSim(o,seed);while(!s.done)stepSim(s);return s;}
+
+// ---------- çizim ----------
+const cv=document.getElementById("scene"),cx=cv.getContext("2d");
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const C={};["--amber","--threat","--track","--paint","--ok","--soldier","--muted","--line","--text"].forEach(k=>C[k]=css(k));
+let sim=null,paused=false,acc=0,last=0;
+function view(){const z=+document.getElementById("zoom").value;const k=(cv.height/640)*z;const cyw=z>1?60:250;return {k,ox:cv.width/2,oy:cv.height/2+cyw*k};}
+function W(x,y,v){return [v.ox+x*v.k,v.oy-y*v.k];}
+function draw(){
+  const v=view();cx.fillStyle="#081014";cx.fillRect(0,0,cv.width,cv.height);
+  cx.save();cx.font="12px 'IBM Plex Mono', monospace";
+  // menzil halkaları
+  [[P.detectR,"akustik tespit 350 m"],[P.launchR,"fırlatma 170 m"],[50,"50 m"]].forEach(([R,t],i)=>{
+    const [x,y]=W(0,0,v);cx.strokeStyle=i===1?"rgba(242,169,59,.35)":"rgba(124,147,153,.25)";cx.setLineDash(i===1?[6,6]:[2,6]);
+    cx.beginPath();cx.arc(x,y,R*v.k,0,7);cx.stroke();cx.setLineDash([]);cx.fillStyle=C["--muted"];cx.fillText(t,x+4,y-R*v.k-4);});
+  // boya
+  if(sim)for(const p of sim.paints){const [x,y]=W(p.x,p.y,v);const age=sim.t-p.t,rr=Math.min(1,age*3);
+    cx.fillStyle=p.bad?"rgba(255,90,78,.5)":"rgba(224,82,210,.55)";cx.beginPath();cx.arc(x,y,(6+14*rr)*Math.max(1,v.k/1.2)/1.5,0,7);cx.fill();
+    if(age<0.6){cx.strokeStyle=p.bad?C["--threat"]:C["--paint"];cx.lineWidth=2;cx.beginPath();cx.arc(x,y,10+60*age,0,7);cx.stroke();cx.lineWidth=1;}}
+  // askerler
+  const ss=sim?sim.soldiers:SOLDIERS.map((p,i)=>({id:i,x:p[0],y:p[1],tubes:P.tubes,hit:false}));
+  for(const sd of ss){const [x,y]=W(sd.x,sd.y,v);cx.fillStyle=sd.hit?C["--threat"]:C["--soldier"];cx.fillRect(x-4,y-4,8,8);
+    cx.fillStyle=C["--muted"];if(v.k>2)cx.fillText(`A${sd.id+1}·${sd.tubes}`,x+7,y+4);}
+  if(sim){
+    for(const f of sim.fpvs){if(!f.active)continue;
+      cx.strokeStyle="rgba(255,90,78,.45)";cx.beginPath();f.trail.forEach(([a,b],i)=>{const [x,y]=W(a,b,v);i?cx.lineTo(x,y):cx.moveTo(x,y);});cx.stroke();
+      if(!f.alive)continue;
+      if(f.trk){const [x,y]=W(f.trk.x,f.trk.y,v);cx.strokeStyle=C["--track"];cx.beginPath();cx.arc(x,y,Math.max(5,f.trk.err*v.k),0,7);cx.stroke();}
+      const [x,y]=W(f.x,f.y,v),ang=Math.atan2(-f.vy,f.vx);cx.save();cx.translate(x,y);cx.rotate(ang);cx.fillStyle=C["--threat"];
+      cx.beginPath();cx.moveTo(8,0);cx.lineTo(-6,-5);cx.lineTo(-6,5);cx.closePath();cx.fill();cx.restore();
+      cx.fillStyle=C["--threat"];cx.fillText(`FPV-${f.id+1}`,x+9,y-8);}
+    for(const ic of sim.ics){cx.strokeStyle=ic.done?"rgba(242,169,59,.25)":C["--amber"];cx.lineWidth=1.5;cx.beginPath();
+      ic.trail.forEach(([a,b],i)=>{const [x,y]=W(a,b,v);i?cx.lineTo(x,y):cx.moveTo(x,y);});if(!ic.done){const [x,y]=W(ic.x,ic.y,v);cx.lineTo(x,y);}cx.stroke();cx.lineWidth=1;
+      if(!ic.done){const [x,y]=W(ic.x,ic.y,v);cx.fillStyle=C["--amber"];cx.beginPath();cx.arc(x,y,3.5,0,7);cx.fill();}}
+  }
+  // vizör (HMD)
+  const R=Math.min(86,cv.width*0.1),hx=R+22,hy=cv.height-R-22;
+  cx.fillStyle="rgba(8,16,20,.85)";cx.beginPath();cx.arc(hx,hy,R+14,0,7);cx.fill();
+  cx.strokeStyle="rgba(92,200,224,.6)";cx.beginPath();cx.arc(hx,hy,R,0,7);cx.stroke();cx.beginPath();cx.arc(hx,hy,R*0.5,0,7);cx.stroke();
+  cx.fillStyle=C["--track"];cx.textAlign="center";cx.fillText("K",hx,hy-R-3);cx.fillText("VİZÖR · A2",hx,hy+R+13);
+  if(sim){const me=sim.soldiers[1];for(const f of sim.fpvs){if(!f.alive||!f.trk||f.trk.n<3)continue;
+    const dx=f.trk.x-me.x,dy=f.trk.y-me.y,d=hyp(dx,dy),b=Math.atan2(dx,dy),rr=R*Math.min(1,d/P.detectR);
+    const x=hx+Math.sin(b)*rr,y=hy-Math.cos(b)*rr,tti=d/Math.max(5,hyp(f.trk.vx,f.trk.vy));
+    cx.fillStyle=tti<4?C["--threat"]:C["--amber"];cx.beginPath();cx.arc(x,y,4,0,7);cx.fill();cx.fillText(tti.toFixed(1)+"s",x,y-8);}}
+  cx.textAlign="left";
+  if(sim){cx.fillStyle=C["--text"];cx.font="600 15px 'Chakra Petch', sans-serif";
+    const g=sim.o.guid==="pn"?"PN · önünü kesme":sim.o.guid==="bug"?"BÖCEK BEYNİ":"KOVALAMA",n=sim.o.net==="on"?"AĞ AKTİF":"AĞ KOPTU";
+    cx.fillText(`T+${sim.t.toFixed(1)} s   ${g}   ${n}`,16,26);
+    if(sim.done){cx.font="700 26px 'Chakra Petch', sans-serif";const ok=sim.leaks===0;cx.fillStyle=ok?C["--ok"]:C["--threat"];
+      cx.fillText(ok?"MANGA KAYIPSIZ":`${sim.leaks} FPV SIZDI`,16,60);}}
+  cx.restore();
+}
+function ui(){if(!sim)return;
+  document.getElementById("sKill").textContent=sim.kills;document.getElementById("sLeak").textContent=sim.leaks;
+  document.getElementById("sTube").textContent=sim.tubesUsed;document.getElementById("sTime").textContent=sim.t.toFixed(1);
+  const lg=document.getElementById("log");if(lg.childElementCount!==sim.events.length){
+    lg.innerHTML=sim.events.map(e=>`<div class="${e.cls}">${e.t.toFixed(1).padStart(5)}s  ${e.msg}</div>`).join("");lg.scrollTop=lg.scrollHeight;}}
+function opts(){return {n:+nFpv.value,guid:guid.value,net:net.value,evade:evade.value,sig:P.sigNet};}
+function start(){sim=createSim(opts(),(Math.random()*1e9)|0);paused=false;document.getElementById("pause").textContent="Duraklat";}
+function loop(ts){const dtr=Math.min(0.05,(ts-last)/1000||0);last=ts;
+  if(sim&&!paused&&!sim.done){acc+=dtr*(+spd.value);while(acc>=P.dt&&!sim.done){stepSim(sim);acc-=P.dt;}}
+  draw();ui();requestAnimationFrame(loop);}
+const nFpv=document.getElementById("nFpv"),guid=document.getElementById("guid"),net=document.getElementById("net"),evade=document.getElementById("evade"),spd=document.getElementById("spd");
+document.getElementById("go").onclick=start;
+document.getElementById("pause").onclick=e=>{paused=!paused;e.target.textContent=paused?"Devam":"Duraklat";};
+start();requestAnimationFrame(loop);
+
+// ---------- sekmeler ----------
+document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("nav.tabs button").forEach(x=>x.setAttribute("aria-selected",x===b));
+  ["sim","hud","net","ear","bug","data","ikiz","karar","ormia","civ","mc"].forEach(p=>document.getElementById("p-"+p).hidden=p!==b.dataset.p);
+  try{localStorage.setItem("kalkanTab",b.dataset.p);}catch(e){}});
+{let t=null;try{t=localStorage.getItem("kalkanTab");}catch(e){}setTimeout(()=>document.querySelector(`[data-p="${t||"data"}"]`)?.click(),0);}
+document.querySelector('[data-p="mc"]').addEventListener("click",()=>{const b=document.getElementById("mcGo");if(!b.dataset.ran&&!b.disabled){b.dataset.ran=1;setTimeout(()=>b.click(),50);}});
+
+// ---------- Monte Carlo ----------
+function chart(el,xs,series,xl,yl){
+  const w=520,h=300,m={l:48,r:14,t:14,b:56},iw=w-m.l-m.r,ih=h-m.t-m.b;
+  const X=i=>m.l+iw*(xs.length>1?i/(xs.length-1):0.5),Y=v=>m.t+ih*(1-v);
+  let s=`<svg viewBox="0 0 ${w} ${h}" role="img" font-family="IBM Plex Mono, monospace" font-size="11">`;
+  for(let g=0;g<=4;g++){const y=Y(g/4);s+=`<line x1="${m.l}" x2="${w-m.r}" y1="${y}" y2="${y}" stroke="${C["--line"]}"/><text x="${m.l-6}" y="${y+4}" text-anchor="end" fill="${C["--muted"]}">${g*25}%</text>`;}
+  xs.forEach((x,i)=>s+=`<text x="${X(i)}" y="${h-m.b+16}" text-anchor="middle" fill="${C["--muted"]}">${x}</text>`);
+  s+=`<text x="${m.l+iw/2}" y="${h-m.b+32}" text-anchor="middle" fill="${C["--muted"]}">${xl}</text>`;
+  let lx=m.l;series.forEach(se=>{
+    s+=`<polyline fill="none" stroke="${se.c}" stroke-width="2.2" ${se.dash?'stroke-dasharray="5 4"':''} points="${se.v.map((v,i)=>X(i)+","+Y(v)).join(" ")}"/>`;
+    se.v.forEach((v,i)=>s+=`<circle cx="${X(i)}" cy="${Y(v)}" r="3" fill="${se.c}"><title>${se.name}: ${(v*100).toFixed(0)}%</title></circle>`);
+    s+=`<rect x="${lx}" y="${h-14}" width="10" height="3" fill="${se.c}"/><text x="${lx+14}" y="${h-10}" fill="${C["--text"]}">${se.name}</text>`;lx+=se.name.length*7+30;});
+  el.innerHTML=s+"</svg>";
+}
+function placeholder(){const e=[0,0,0,0,0,0];chart(document.getElementById("c1"),[1,2,3,4,5,6],[{name:"çalıştırılmadı",c:C["--line"],v:e}],"aynı anda gelen FPV sayısı","");
+  chart(document.getElementById("c2"),[20,25,30,35,40,45,50,55,60],[{name:"çalıştırılmadı",c:C["--line"],v:[0,0,0,0,0,0,0,0,0]}],"FPV hızı (m/s)","");}
+placeholder();
+document.getElementById("mcGo").onclick=()=>{
+  const N=200,btn=document.getElementById("mcGo"),bar=document.getElementById("mcBar"),st=document.getElementById("mcStat");btn.disabled=true;
+  const jobs=[];
+  const cfg1=[{name:"PN",guid:"pn",net:"on",c:C["--amber"]},{name:"Böcek beyni",guid:"bug",net:"on",c:C["--ok"]},{name:"PN · ağ koptu",guid:"pn",net:"off",c:C["--track"],dash:1},{name:"Kovalama",guid:"pursuit",net:"on",c:C["--threat"]}];
+  const sp=[20,25,30,35,40,45,50,55,60],cfg2=[{name:"PN (önünü kesme)",guid:"pn",c:C["--amber"]},{name:"Böcek beyni",guid:"bug",c:C["--ok"]},{name:"Kovalama",guid:"pursuit",c:C["--threat"]}];
+  const r1=cfg1.map(()=>Array(6).fill(0)),t1=cfg1.map(()=>Array(6).fill(0)),r2=cfg2.map(()=>Array(9).fill(0));
+  cfg1.forEach((c,ci)=>{for(let n=1;n<=6;n++)for(let k=0;k<N;k++)jobs.push(()=>{const s=runHeadless({n,guid:c.guid,net:c.net,evade:"on",sig:P.sigNet},1e5*ci+1e3*n+k+7);if(s.leaks===0)r1[ci][n-1]++;t1[ci][n-1]+=s.tubesUsed;});});
+  cfg2.forEach((c,ci)=>{sp.forEach((v,vi)=>{for(let k=0;k<N;k++)jobs.push(()=>{const s=runHeadless({n:1,guid:c.guid,net:"on",evade:"on",sig:P.sigNet,fpvSpeed:v},5e6+1e5*ci+1e3*vi+k);if(s.kills>0)r2[ci][vi]++;});});});
+  let i=0;const tot=jobs.length,t0=performance.now();
+  (function chunk(){const end=performance.now()+30;while(i<tot&&performance.now()<end)jobs[i++]();
+    bar.style.width=(100*i/tot)+"%";st.textContent=`${i.toLocaleString("tr-TR")} / ${tot.toLocaleString("tr-TR")} saldırı`;
+    if(i<tot)return setTimeout(chunk,0);
+    chart(document.getElementById("c1"),[1,2,3,4,5,6],cfg1.map((c,ci)=>({...c,v:r1[ci].map(x=>x/N)})),"aynı anda gelen FPV sayısı");
+    chart(document.getElementById("c2"),sp,cfg2.map((c,ci)=>({...c,v:r2[ci].map(x=>x/N)})),"FPV hızı (m/s)");
+    const tp=t1.map(a=>(a[4]/N).toFixed(1));
+    window.__mc={r1:r1.map(a=>a.map(x=>x/N)),r2:r2.map(a=>a.map(x=>x/N)),tubes:t1.map(a=>a.map(x=>x/N))};
+    st.textContent=`${tot.toLocaleString("tr-TR")} saldırı, ${((performance.now()-t0)/1000).toFixed(1)} s. 5'li sürüde ortalama tüp: ağ aktif ${tp[0]}, ağ koptu ${tp[2]}.`;
+    btn.disabled=false;})();
+};
+})();
+</script>
+<script>
+(function(){
+"use strict";
+const W=80,H=60,N=W*H;
+function rng(s){let a=s>>>0;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+const $=id=>document.getElementById(id);
+// ---- arka plan dokusu (orman benzeri lekeler) ----
+const TW=512,TH=256;let tex;
+function makeTex(seed){
+  const r=rng(seed);tex=new Float32Array(TW*TH).fill(0.62);
+  for(let b=0;b<900;b++){const cx=r()*TW,cy=r()*TH,rad=2+r()*14,amp=(r()-0.5)*0.55;
+    const x0=Math.floor(cx-rad*2),x1=Math.ceil(cx+rad*2),y0=Math.floor(cy-rad*2),y1=Math.ceil(cy+rad*2);
+    for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){const d2=((x-cx)**2+(y-cy)**2)/(rad*rad);if(d2>4)continue;
+      const xi=((x%TW)+TW)%TW,yi=((y%TH)+TH)%TH;tex[yi*TW+xi]+=amp*Math.exp(-d2*1.5);}}
+  // dal çizgileri (uzun kenarlar - STMD bunları bastırmalı)
+  for(let l=0;l<60;l++){let x=r()*TW,y=r()*TH;const a=r()*Math.PI,len=20+r()*60,dx=Math.cos(a),dy=Math.sin(a);
+    for(let k=0;k<len;k++){const xi=((Math.round(x+dx*k)%TW)+TW)%TW,yi=((Math.round(y+dy*k)%TH)+TH)%TH;tex[yi*TW+xi]-=0.25;}}
+  for(let i=0;i<tex.length;i++)tex[i]=Math.min(0.95,Math.max(0.12,tex[i]));
+}
+function texAt(x,y){x=((x%TW)+TW)%TW;y=((y%TH)+TH)%TH;const x0=Math.floor(x),y0=Math.floor(y),fx=x-x0,fy=y-y0,x1=(x0+1)%TW,y1=(y0+1)%TH;
+  return tex[y0*TW+x0]*(1-fx)*(1-fy)+tex[y0*TW+x1]*fx*(1-fy)+tex[y1*TW+x0]*(1-fx)*fy+tex[y1*TW+x1]*fx*fy;}
+
+// ---- durum ----
+let S;
+function reset(){
+  makeTex((Math.random()*1e9)|0);
+  S={t:0,ox:0,oy:0,hd:Math.random()*6.28,I:new Float32Array(N),ref:new Float32Array(N),D:new Float32Array(N),
+    E:new Int8Array(N),v2:new Float32Array(N),sp:new Uint8Array(N),A:new Float32Array(N),
+    tx:W/2,ty:H/2,est:null,evx:0,evy:0,errs:[],locks:[],dirV:new Float32Array(8),ras:[],flow:[0,0],flowT:[0,0],evFrac:0,spN:0,init:false,
+    lc:null,th:0,thP:0,thd:0,lv:0,hist:[],tau:Infinity,tauT:Infinity,tauErr:[],phase:false};
+}
+function step(){
+  const clutter=+$("clut").value,bgv=+$("bgv").value,sz=+$("tsz").value,nz=+$("nz").value,tsp=+$("tsp").value;
+  S.t+=1;
+  // önleyicinin kendi hareketi: yavaşça dönen yönde kayma
+  S.hd+=0.01*Math.sin(S.t*0.013);const dox=bgv*Math.cos(S.hd),doy=bgv*0.6*Math.sin(S.hd);S.ox+=dox;S.oy+=doy;S.flowT=[-dox,-doy];
+  // hedef yolu
+  const tt=S.t*tsp,loom=$("mode").value==="loom",EP=400,DT=0.005;let szE=sz;
+  if(loom){ // çarpışma rotası: hedef görüşte sabit açıda kalır, sadece büyür
+    const k=S.t%EP,Dm=60-58*k/EP;szE=Math.min(40,90/Dm);S.tauT=Dm/(58/(EP*DT));S.kEp=k;
+    if(k===0){S.hist=[];S.lc=null;S.th=0;S.thd=0;S.phase=false;S.lnb=[];}
+    S.tx=W/2+4*Math.sin(tt*0.011);S.ty=H/2+3*Math.sin(tt*0.016+2);
+  }else{S.tx=W/2+26*Math.sin(tt*0.011)+7*Math.sin(tt*0.037+1);S.ty=H/2+17*Math.sin(tt*0.016+2)+5*Math.sin(tt*0.043);}
+  const hs=szE/2;
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++){
+    let b=texAt(x+S.ox,y+S.oy);b=0.62+(b-0.62)*clutter;
+    const cx=Math.max(0,Math.min(x+1,S.tx+hs)-Math.max(x,S.tx-hs)),cy=Math.max(0,Math.min(y+1,S.ty+hs)-Math.max(y,S.ty-hs));
+    const cov=cx*cy;S.I[y*W+x]=b*(1-cov)+0.07*cov;}
+  // olay kamerası
+  const th=0.1;let ev=0;
+  for(let i=0;i<N;i++){const L=Math.log(S.I[i]+0.02);if(!S.init){S.ref[i]=L;S.D[i]=S.I[i];continue;}
+    const d=L-S.ref[i];let e=0;if(d>th){e=1;S.ref[i]+=th*Math.floor(d/th);}else if(d<-th){e=-1;S.ref[i]-=th*Math.floor(-d/th);}
+    if(Math.random()<nz)e=Math.random()<0.5?1:-1;S.E[i]=e;if(e)ev++;}
+  S.evFrac=ev/N;
+  // T4/T5 Reichardt (geniş alan)
+  let hx=0,hy=0,norm=1e-6;
+  for(let y=0;y<H-1;y++)for(let x=0;x<W-1;x++){const i=y*W+x;
+    hx+=S.D[i]*S.I[i+1]-S.I[i]*S.D[i+1];hy+=S.D[i]*S.I[i+W]-S.I[i]*S.D[i+W];norm+=S.I[i]*S.I[i];}
+  for(let i=0;i<N;i++)S.D[i]=0.7*S.D[i]+0.3*S.I[i];
+  const g=900/Math.max(0.2,clutter);S.flow=[S.flow[0]*0.85+0.15*hx/norm*g,S.flow[1]*0.85+0.15*hy/norm*g];
+  // STMD: merkez-çevre + LIF
+  let spN=0;
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++){
+    let c=0,s=0,cn=0,sn=0;
+    for(let dy=-4;dy<=4;dy++){const yy=y+dy;if(yy<0||yy>=H)continue;for(let dx=-4;dx<=4;dx++){const xx=x+dx;if(xx<0||xx>=W)continue;
+      const a=S.E[yy*W+xx]?1:0;if(dx>=-1&&dx<=1&&dy>=-1&&dy<=1){c+=a;cn++;}else{s+=a;sn++;}}}
+    const inp=Math.max(0,c/cn-3*s/sn),i=y*W+x;
+    S.v2[i]=0.55*S.v2[i]+1.3*inp;if(S.v2[i]>1){S.sp[i]=1;S.v2[i]=0;spN++;}else S.sp[i]=0;
+    S.A[i]=0.82*S.A[i]+S.sp[i];}
+  S.spN=spN;
+  // kilit: öngörülen konum etrafında ağırlıklı merkez
+  let found=false;
+  const tryWin=(px,py,R)=>{let sw=0,sx=0,sy=0;for(let y=Math.max(0,Math.floor(py-R));y<Math.min(H,py+R);y++)for(let x=Math.max(0,Math.floor(px-R));x<Math.min(W,px+R);x++){const a=S.A[y*W+x];if(a>0.25){sw+=a;sx+=a*(x+0.5);sy+=a*(y+0.5);}}return sw>0.8?[sx/sw,sy/sw]:null;};
+  let m=null;
+  if(S.est){m=tryWin(S.est[0]+S.evx,S.est[1]+S.evy,7);}
+  if(!m){let best=0,bi=-1;for(let i=0;i<N;i++)if(S.A[i]>best){best=S.A[i];bi=i;}if(best>1.1)m=tryWin(bi%W+0.5,Math.floor(bi/W)+0.5,4);}
+  if(m){if(S.est){const vx=m[0]-S.est[0],vy=m[1]-S.est[1];S.evx=0.8*S.evx+0.2*vx;S.evy=0.8*S.evy+0.2*vy;}S.est=m;found=true;}
+  else if(S.est){S.est=[S.est[0]+S.evx,S.est[1]+S.evy];S.miss=(S.miss||0)+1;if(S.miss>25){S.est=null;S.miss=0;}}
+  if(found)S.miss=0;
+  S.locks.push(found?1:0);if(S.locks.length>300)S.locks.shift();
+  if(found){S.errs.push(Math.hypot(S.est[0]-S.tx,S.est[1]-S.ty));if(S.errs.length>300)S.errs.shift();}
+  // yön nöronları (LIF)
+  const sp=Math.hypot(S.evx,S.evy),ang=Math.atan2(S.evy,S.evx),col=[];
+  for(let k=0;k<8;k++){const pa=k*Math.PI/4-Math.PI/2;const inp=found?Math.max(0,Math.cos(ang-pa))**3*sp*1.6:0;
+    S.dirV[k]=0.8*S.dirV[k]+inp;if(S.dirV[k]>1){col.push(1);S.dirV[k]=0;}else col.push(0);}
+  S.ras.push(col);if(S.ras.length>300)S.ras.shift();
+  // looming: kilidin etrafında koyu alanın büyüme hızı
+  if(loom){
+    if(!S.lc&&S.est)S.lc=[S.est[0],S.est[1]];
+    if(!S.lc){let mn=1,mi=-1;for(let i=0;i<N;i++)if(S.I[i]<mn){mn=S.I[i];mi=i;}if(mn<0.1)S.lc=[mi%W+0.5,Math.floor(mi/W)+0.5];} // sabit ama koyu leke: STMD'nin kaçırdığını yakala
+    if(S.lc){const R=Math.max(6,S.th*0.9+4);let a=0,sx=0,sy=0,off=0,all=0;
+      for(let y=Math.max(0,Math.floor(S.lc[1]-R));y<Math.min(H,S.lc[1]+R);y++)for(let x=Math.max(0,Math.floor(S.lc[0]-R));x<Math.min(W,S.lc[0]+R);x++){
+        const i=y*W+x,w=Math.max(0,Math.min(1,(0.115-S.I[i])/0.045));a+=w;sx+=w*(x+0.5);sy+=w*(y+0.5);if(S.E[i]<0)off++;if(S.E[i])all++;}
+      if(a>0.5){S.lc=[sx/a,sy/a];}
+      S.thP=S.th;S.th=0.7*S.th+0.3*Math.sqrt(a);
+      // τ = 1 / d(ln θ)/dt : son 0,2 s üzerinde doğrusal uydurma (gürültüye dayanıklı)
+      S.lnb=S.lnb||[];S.lnb.push(Math.log(Math.max(0.5,S.th)));if(S.lnb.length>40)S.lnb.shift();
+      let slope=0;const n=S.lnb.length;if(n>=20){let mx=(n-1)/2,my=S.lnb.reduce((u,v)=>u+v,0)/n,num=0,den=0;S.lnb.forEach((v,i)=>{num+=(i-mx)*(v-my);den+=(i-mx)**2;});slope=num/den/DT;}
+      S.thd=slope;S.tau=(slope>0.2&&S.th>2.5)?1/slope:Infinity;
+      // LGMD benzeri LIF: genişleyen kenarın OFF olayları uyarır, dağınık olaylar baskılar
+      S.lv=0.6*S.lv+Math.max(0,0.035*off-0.02*(all-off));const spk=S.lv>1;if(spk)S.lv=0;
+      S.phase=S.tau<0.25;
+      S.hist.push({te:S.tau,tt:S.tauT,th:S.th,sp:spk,k:S.kEp});
+      if(S.tauT>0.1&&S.tauT<1.5&&isFinite(S.tau)){S.tauErr.push(Math.abs(S.tau-S.tauT)/S.tauT);if(S.tauErr.length>600)S.tauErr.shift();}
+    }else S.hist.push({te:Infinity,tt:S.tauT,th:0,sp:false,k:S.kEp});
+  }
+  S.init=true;
+}
+
+// ---- çizim ----
+const ctx={};["cCam","cDvs","cStmd","cFlow","cRas","cLoom"].forEach(id=>{ctx[id]=$(id).getContext("2d");ctx[id].imageSmoothingEnabled=false;});
+const off=document.createElement("canvas");off.width=W;off.height=H;const oc=off.getContext("2d"),img=oc.createImageData(W,H);
+function blit(id,fn){for(let i=0;i<N;i++){const [r,g,b]=fn(i);img.data[i*4]=r;img.data[i*4+1]=g;img.data[i*4+2]=b;img.data[i*4+3]=255;}
+  oc.putImageData(img,0,0);const c=ctx[id];c.imageSmoothingEnabled=false;c.drawImage(off,0,0,320,240);}
+const K=4;
+function cross(c,x,y,col,r){c.strokeStyle=col;c.lineWidth=2;c.beginPath();c.moveTo(x*K-r,y*K);c.lineTo(x*K+r,y*K);c.moveTo(x*K,y*K-r);c.lineTo(x*K,y*K+r);c.stroke();}
+function draw(){
+  blit("cCam",i=>{const v=S.I[i]*235|0;return [v*0.85|0,v,v*0.8|0];});
+  blit("cDvs",i=>S.E[i]>0?[111,207,142]:S.E[i]<0?[224,82,210]:[8,14,17]);
+  blit("cStmd",i=>{const a=Math.min(1,S.A[i]/2.5);return [8+a*240|0,14+a*160|0,17+a*40|0];});
+  const c=ctx.cStmd;c.strokeStyle="rgba(255,255,255,.7)";c.lineWidth=1.5;c.beginPath();c.arc(S.tx*K,S.ty*K,12,0,7);c.stroke();
+  if(S.est)cross(c,S.est[0],S.est[1],"#f2a93b",10);
+  // akış paneli
+  const f=ctx.cFlow;f.fillStyle="#050a0c";f.fillRect(0,0,320,240);f.drawImage($("cDvs"),0,0,320,240);f.fillStyle="rgba(5,10,12,.78)";f.fillRect(0,0,320,240);
+  const cx=160,cy=120;f.strokeStyle="#223640";f.lineWidth=1;[40,80].forEach(r=>{f.beginPath();f.arc(cx,cy,r,0,7);f.stroke();});
+  const arrow=(vx,vy,col,w)=>{const s=60,ex=cx+vx*s,ey=cy+vy*s;f.strokeStyle=col;f.lineWidth=w;f.beginPath();f.moveTo(cx,cy);f.lineTo(ex,ey);f.stroke();
+    const a=Math.atan2(ey-cy,ex-cx);f.beginPath();f.moveTo(ex,ey);f.lineTo(ex-10*Math.cos(a-0.4),ey-10*Math.sin(a-0.4));f.moveTo(ex,ey);f.lineTo(ex-10*Math.cos(a+0.4),ey-10*Math.sin(a+0.4));f.stroke();};
+  arrow(S.flowT[0],S.flowT[1],"#7c9399",3);arrow(S.flow[0],S.flow[1],"#5cc8e0",2);
+  f.fillStyle="#7c9399";f.font="12px 'IBM Plex Mono', monospace";f.fillText("gri: gerçek   mavi: T4/T5 tahmini",10,230);
+  // raster
+  const r=ctx.cRas;r.fillStyle="#050a0c";r.fillRect(0,0,300,128);const lab=["K","KD","D","GD","G","GB","B","KB"];
+  r.font="10px 'IBM Plex Mono', monospace";
+  for(let k=0;k<8;k++){r.fillStyle="#7c9399";r.fillText(lab[k],2,k*16+12);}
+  r.fillStyle="#f2a93b";S.ras.forEach((col,t)=>col.forEach((v,k)=>{if(v)r.fillRect(22+t*(278/300),k*16+3,1.6,11);}));
+  // looming paneli
+  const g2=ctx.cLoom,GW=640,GH=220,L=46,Rr=46,T=18,B=30,iw=GW-L-Rr,ih=GH-T-B;g2.fillStyle="#050a0c";g2.fillRect(0,0,GW,GH);
+  g2.font="11px 'IBM Plex Mono', monospace";g2.lineWidth=1;
+  const Yt=v=>T+ih*(1-Math.min(2,v)/2),Yth=v=>T+ih*(1-Math.min(40,v)/40),Xk=k=>L+iw*k/400;
+  for(let q=0;q<=4;q++){const y=T+ih*q/4;g2.strokeStyle="#223640";g2.beginPath();g2.moveTo(L,y);g2.lineTo(GW-Rr,y);g2.stroke();
+    g2.fillStyle="#7c9399";g2.textAlign="right";g2.fillText((2-q*0.5).toFixed(1)+" s",L-6,y+4);g2.textAlign="left";g2.fillText((40-q*10)+" px",GW-Rr+6,y+4);}
+  g2.fillText("zaman → (bir yaklaşma = 2 s, 60 m'den 2 m'ye)",L,GH-8);
+  if($("mode").value!=="loom"){g2.fillStyle="#d5e1e3";g2.font="600 15px 'Chakra Petch', sans-serif";g2.textAlign="center";g2.fillText("Senaryo → Yaklaşma (looming) seç",GW/2,GH/2);g2.textAlign="left";}
+  else{
+    const y25=Yt(0.25);g2.setLineDash([4,4]);g2.strokeStyle="rgba(242,169,59,.6)";g2.beginPath();g2.moveTo(L,y25);g2.lineTo(GW-Rr,y25);g2.stroke();g2.setLineDash([]);
+    g2.fillStyle="#f2a93b";g2.fillText("son faz eşiği τ=0,25 s",L+6,y25-5);
+    const line=(fn,col,w)=>{g2.strokeStyle=col;g2.lineWidth=w;g2.beginPath();let st=false;S.hist.forEach(h=>{const v=fn(h);if(!isFinite(v)){st=false;return;}const x=Xk(h.k),y=v;st?g2.lineTo(x,y):g2.moveTo(x,y);st=true;});g2.stroke();g2.lineWidth=1;};
+    line(h=>Yt(h.tt),"#7c9399",3);line(h=>isFinite(h.te)?Yt(h.te):NaN,"#5cc8e0",2);line(h=>Yth(h.th),"rgba(242,169,59,.8)",1.5);
+    g2.strokeStyle="#e052d2";S.hist.forEach(h=>{if(h.sp){const x=Xk(h.k);g2.beginPath();g2.moveTo(x,GH-B);g2.lineTo(x,GH-B-10);g2.stroke();}});
+    if(S.phase){g2.fillStyle="#ff5a4e";g2.font="700 16px 'Chakra Petch', sans-serif";g2.fillText("SON FAZ: KAPANIŞ",GW-Rr-170,T+18);}
+  }
+  // metrikler
+  const e=S.errs.length?S.errs.reduce((a,b)=>a+b,0)/S.errs.length:NaN,l=S.locks.reduce((a,b)=>a+b,0)/Math.max(1,S.locks.length);
+  $("mErr").textContent=isNaN(e)?"–":e.toFixed(1);$("mLock").textContent=(l*100).toFixed(0);
+  $("mEv").textContent=(S.evFrac*100).toFixed(1);$("mSp").textContent=S.spN;
+  $("mTau").textContent=$("mode").value==="loom"&&isFinite(S.tau)?S.tau.toFixed(2):"–";
+  $("mTauE").textContent=S.tauErr.length?(100*S.tauErr.reduce((a,b)=>a+b,0)/S.tauErr.length).toFixed(0):"–";
+  const lk=$("lock"),on=S.locks[S.locks.length-1];lk.textContent=on?"HEDEF KİLİTLİ":"ARANIYOR";lk.style.background=on?"rgba(111,207,142,.15)":"rgba(255,90,78,.12)";lk.style.color=on?"#6fcf8e":"#ff5a4e";
+}
+$("mode").onchange=()=>{S.tauErr=[];S.hist=[];};
+function loop(){if(!document.getElementById("p-bug").hidden){for(let k=0;k<2;k++)step();draw();}requestAnimationFrame(loop);}
+$("rst").onclick=reset;
+reset();requestAnimationFrame(loop);
+})();
+</script>
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+function gauss(){let u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+const FS=16000,N=1024,DF=FS/N,K0=6,K1=192,NB=K1-K0,C=343,GA=360;
+const PAIRS=[[0,1],[0,2],[0,3],[1,2],[1,3],[2,3]];
+let MIC=[],TC=null,TS=null,dCur=0;
+function geom(d){
+  dCur=d;const h=d/2;MIC=[[-h,h],[h,h],[h,-h],[-h,-h]];
+  TC=new Float32Array(PAIRS.length*GA*NB);TS=new Float32Array(PAIRS.length*GA*NB);
+  for(let p=0;p<PAIRS.length;p++){const [i,j]=PAIRS[p];
+    for(let a=0;a<GA;a++){const th=a*Math.PI/180,ux=Math.sin(th),uy=Math.cos(th);
+      const dt=(-(MIC[i][0]*ux+MIC[i][1]*uy)+(MIC[j][0]*ux+MIC[j][1]*uy))/C;
+      for(let b=0;b<NB;b++){const w=2*Math.PI*(K0+b)*DF*dt,o=(p*GA+a)*NB+b;TC[o]=Math.cos(w);TS[o]=Math.sin(w);}}}
+}
+let E;
+function reset(){E={t:0,az:Math.random()*360,Ps:new Float32Array(NB),P1:new Float32Array(GA),P2:new Float32Array(GA),
+  e1:[],e2:[],det:[],fa:[],f0:0,detNow:false,est1:0,est2:0,score:0,spec:new Float32Array(NB)};}
+function frame(){
+  const on=$("eOn").value==="1",snr=+$("eSnr").value,battle=$("eNz").value==="battle",d=+$("eD").value,mv=$("eMv").value==="1";
+  if(d!==dCur)geom(d);
+  E.t++;if(mv)E.az=(E.az+0.9)%360;
+  const th=E.az*Math.PI/180,ux=Math.sin(th),uy=Math.cos(th);
+  // dron spektrumu: pervane harmonikleri
+  const f0=310+30*Math.sin(E.t*0.02),S=new Float32Array(NB*2);let ps=0;
+  if(on){for(let h=1;h<=14;h++){const f=h*f0,kb=f/DF-K0,kc=Math.round(kb);if(kc<0||kc>=NB)continue;const A=1/Math.sqrt(h);
+    for(const dk of [-1,0,1]){const b=kc+dk;if(b<0||b>=NB)continue;const amp=A*(dk===0?1:0.35),ph=Math.random()*6.283;S[2*b]+=amp*Math.cos(ph);S[2*b+1]+=amp*Math.sin(ph);}}}
+  // referans güç (dron yokken de aynı gürültü seviyesi)
+  const PREF=6.5;for(let b=0;b<NB;b++)ps+=S[2*b]**2+S[2*b+1]**2;
+  const pn=PREF/Math.pow(10,snr/10);let pinkSum=0;for(let b=0;b<NB;b++)pinkSum+=1/((K0+b)*DF);
+  const nsc=Math.sqrt(pn/pinkSum/2);
+  // atış: rastgele yönden gelen geniş bantlı, tutarlı darbe
+  let imp=null;if(battle&&Math.random()<0.3){const a=Math.random()*6.283;imp={ux:Math.sin(a),uy:Math.cos(a),A:Math.sqrt(4*pn/NB)};}
+  const X=MIC.map(()=>new Float32Array(NB*2));
+  for(let m=0;m<4;m++){const tau=-(MIC[m][0]*ux+MIC[m][1]*uy)/C,ti=imp?-(MIC[m][0]*imp.ux+MIC[m][1]*imp.uy)/C:0;
+    for(let b=0;b<NB;b++){const w=2*Math.PI*(K0+b)*DF,c=Math.cos(-w*tau),s=Math.sin(-w*tau);
+      let re=S[2*b]*c-S[2*b+1]*s,im=S[2*b]*s+S[2*b+1]*c;
+      const g=nsc/Math.sqrt((K0+b)*DF);re+=g*gauss();im+=g*gauss();
+      if(imp){const ph=w*0.37*b,cr=Math.cos(ph-w*ti),sr=Math.sin(ph-w*ti);re+=imp.A*cr;im+=imp.A*sr;}
+      X[m][2*b]=re;X[m][2*b+1]=im;}}
+  // ortalama güç spektrumu + harmonik tarak tespiti
+  // beyazlatılmış harmonik tarak (zaman ortalamalı spektrum üzerinde)
+  const Lp=new Float32Array(NB);for(let b=0;b<NB;b++){let p=0;for(let m=0;m<4;m++)p+=X[m][2*b]**2+X[m][2*b+1]**2;E.spec[b]=0.85*E.spec[b]+0.15*p/4;Lp[b]=10*Math.log10(E.spec[b]+1e-12);}
+  const Wh=new Float32Array(NB),win=[];for(let b=0;b<NB;b++){win.length=0;for(let j=Math.max(0,b-15);j<=Math.min(NB-1,b+15);j++)win.push(Lp[j]);win.sort((x,y)=>x-y);Wh[b]=Lp[b]-win[win.length>>1];}
+  let best=-1e9,bf=0;
+  for(let f=80;f<=600;f+=2){let sm=0,n=0;for(let h=1;h<=8;h++){const kb=Math.round(h*f/DF)-K0;if(kb>=0&&kb<NB){sm+=Wh[kb];n++;}}if(n<3)continue;const sc=sm/n;if(sc>best){best=sc;bf=f;}}
+  E.sc=best;E.score=E.sc;E.f0=bf;E.detNow=E.sc>window.__eTh;
+  const W=new Uint8Array(NB);if(E.detNow)for(let h=1;h<=14;h++){const kc=Math.round(h*bf/DF)-K0;for(const dk of[-1,0,1]){const b=kc+dk;if(b>=0&&b<NB)W[b]=1;}}
+  // SRP-PHAT (düz) ve harmonik maskeli
+  const G=PAIRS.map(([i,j])=>{const g=new Float32Array(NB*2);for(let b=0;b<NB;b++){const ar=X[i][2*b],ai=X[i][2*b+1],br=X[j][2*b],bi=X[j][2*b+1];
+    const re=ar*br+ai*bi,im=ai*br-ar*bi,mg=Math.hypot(re,im)+1e-12;g[2*b]=re/mg;g[2*b+1]=im/mg;}return g;});
+  const P1=new Float32Array(GA),P2=new Float32Array(GA);
+  for(let p=0;p<PAIRS.length;p++){const g=G[p];for(let a=0;a<GA;a++){let s1=0,s2=0;const o=(p*GA+a)*NB;
+    for(let b=0;b<NB;b++){const v=g[2*b]*TC[o+b]-g[2*b+1]*TS[o+b];s1+=v;if(W[b])s2+=v;}P1[a]+=s1;P2[a]+=s2;}}
+  let m1=0,m2=0;for(let a=0;a<GA;a++){E.P1[a]=0.6*E.P1[a]+0.4*P1[a];E.P2[a]=0.6*E.P2[a]+0.4*(E.detNow?P2[a]:P1[a]);if(E.P1[a]>E.P1[m1])m1=a;if(E.P2[a]>E.P2[m2])m2=a;}
+  E.est1=m1;E.est2=m2;
+  const cd=(a,b)=>{let x=Math.abs(a-b)%360;return x>180?360-x:x;};
+  if(on){E.e1.push(cd(m1,E.az));E.e2.push(cd(m2,E.az));E.det.push(E.detNow?1:0);}else E.fa.push(E.detNow?1:0);
+  [E.e1,E.e2,E.det,E.fa].forEach(a=>{if(a.length>200)a.shift();});
+}
+const cx={};["eSpec","ePol","eErr"].forEach(i=>cx[i]=$(i).getContext("2d"));
+const med=a=>{if(!a.length)return NaN;const s=[...a].sort((x,y)=>x-y);return s[s.length>>1];};
+function draw(){
+  // spektrum
+  const s=cx.eSpec,w=320,h=240;s.fillStyle="#050a0c";s.fillRect(0,0,w,h);s.font="10px 'IBM Plex Mono', monospace";
+  let mx=-1e9,mn=1e9;const db=[...E.spec].map(v=>10*Math.log10(v+1e-12));db.forEach(v=>{mx=Math.max(mx,v);mn=Math.min(mn,v);});mn=Math.max(mn,mx-45);
+  const X=b=>20+(b/(NB-1))*290,Y=v=>h-24-(Math.max(0,v-mn)/(mx-mn+1e-6))*(h-44);
+  for(let f=500;f<=3000;f+=500){const x=X(f/DF-K0);s.strokeStyle="#223640";s.beginPath();s.moveTo(x,10);s.lineTo(x,h-24);s.stroke();s.fillStyle="#7c9399";s.fillText(f>=1000?(f/1000)+"k":f,x-8,h-10);}
+  s.fillText("Hz",296,h-10);
+  if(E.detNow){s.strokeStyle="rgba(242,169,59,.55)";for(let k=1;k<=14;k++){const b=k*E.f0/DF-K0;if(b>=NB)break;const x=X(b);s.beginPath();s.moveTo(x,10);s.lineTo(x,h-24);s.stroke();}}
+  s.strokeStyle="#5cc8e0";s.lineWidth=1.3;s.beginPath();db.forEach((v,b)=>b?s.lineTo(X(b),Y(v)):s.moveTo(X(b),Y(v)));s.stroke();s.lineWidth=1;
+  // kutup
+  const p=cx.ePol,cxp=160,cyp=122,R=95;p.fillStyle="#050a0c";p.fillRect(0,0,w,h);
+  p.strokeStyle="#223640";[R,R*0.5].forEach(r=>{p.beginPath();p.arc(cxp,cyp,r,0,7);p.stroke();});
+  p.fillStyle="#7c9399";p.font="11px 'IBM Plex Mono', monospace";p.textAlign="center";p.fillText("K",cxp,cyp-R-6);p.textAlign="left";
+  const curve=(P,col)=>{let a0=Infinity,a1=-Infinity;for(const v of P){a0=Math.min(a0,v);a1=Math.max(a1,v);}p.strokeStyle=col;p.lineWidth=1.6;p.beginPath();
+    for(let a=0;a<=GA;a++){const v=(P[a%GA]-a0)/(a1-a0+1e-9),r=R*(0.25+0.75*v),t=a*Math.PI/180;const x=cxp+r*Math.sin(t),y=cyp-r*Math.cos(t);a?p.lineTo(x,y):p.moveTo(x,y);}p.stroke();p.lineWidth=1;};
+  curve(E.P1,"rgba(92,200,224,.7)");curve(E.P2,"#f2a93b");
+  const ray=(deg,col,wd)=>{const t=deg*Math.PI/180;p.strokeStyle=col;p.lineWidth=wd;p.beginPath();p.moveTo(cxp,cyp);p.lineTo(cxp+(R+10)*Math.sin(t),cyp-(R+10)*Math.cos(t));p.stroke();p.lineWidth=1;};
+  if($("eOn").value==="1")ray(E.az,"rgba(255,255,255,.8)",2);
+  p.fillStyle="#7c9399";p.fillText("beyaz: gerçek · mavi: düz tahmin · turuncu: maskeli (bizim)",4,h-8);
+  // hata grafiği
+  const g=cx.eErr,GW=640,GH=200,L=40,B=22;g.fillStyle="#050a0c";g.fillRect(0,0,GW,GH);g.font="10px 'IBM Plex Mono', monospace";
+  const Ye=v=>10+(GH-B-10)*(1-Math.min(90,v)/90);
+  [0,30,60,90].forEach(v=>{g.strokeStyle="#223640";g.beginPath();g.moveTo(L,Ye(v));g.lineTo(GW-8,Ye(v));g.stroke();g.fillStyle="#7c9399";g.fillText(v+"°",8,Ye(v)+4);});
+  const ln=(arr,col)=>{g.strokeStyle=col;g.lineWidth=1.5;g.beginPath();arr.forEach((v,i)=>{const x=L+(GW-8-L)*i/199;i?g.lineTo(x,Ye(v)):g.moveTo(x,Ye(v));});g.stroke();g.lineWidth=1;};
+  ln(E.e1,"rgba(92,200,224,.7)");ln(E.e2,"#f2a93b");
+  // durum
+  const on=$("eOn").value==="1",det=$("eDet");det.textContent=E.detNow?"DRON SESİ VAR":"SESSİZ";
+  det.style.background=E.detNow?"rgba(255,90,78,.14)":"rgba(111,207,142,.12)";det.style.color=E.detNow?"#ff5a4e":"#6fcf8e";
+  const f=v=>isNaN(v)?"–":v.toFixed(0);$("eE1").textContent=f(med(E.e1));$("eE2").textContent=f(med(E.e2));
+  $("eF0").textContent=E.detNow?E.f0:"–";
+  const pc=a=>a.length?(100*a.reduce((x,y)=>x+y,0)/a.length).toFixed(0):"–";$("eFa").textContent=pc(E.det)+" / "+pc(E.fa);
+  window.__ear={e1:med(E.e1),e2:med(E.e2),det:pc(E.det),fa:pc(E.fa),sc:E.sc};
+}
+window.__eTh=2;geom(0.2);reset();
+$("eRst").onclick=reset;
+function loop(){if(!$("p-ear").hidden){frame();draw();}requestAnimationFrame(loop);}
+requestAnimationFrame(loop);
+})();
+</script>
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+const cv=$("hud"),c=cv.getContext("2d"),W=cv.width,H=cv.height,FOV=100;
+let H0={yaw:0,t:0,th:[],drag:null};
+function spawn(){H0.th=[];const n=+$("hN").value;for(let i=0;i<n;i++)H0.th.push({b:Math.random()*360,r:300+Math.random()*150,v:30+Math.random()*10,conf:0,id:i+1,kind:Math.random()<0.4?"kablolu":"RF"});H0.t=0;}
+function wrap(a){a=((a%360)+360)%360;return a>180?a-360:a;}
+function step(dt){H0.t+=dt;H0.th.forEach(t=>{t.r=Math.max(0,t.r-t.v*dt);t.conf=Math.min(1,t.conf+dt*0.6);if(t.r<=0){t.r=300+Math.random()*150;t.b=Math.random()*360;t.conf=0;}});}
+function draw(){
+  // sahne: ufuk ve arazi
+  const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,"#27404a");g.addColorStop(0.55,"#5b7076");g.addColorStop(0.56,"#3d4a33");g.addColorStop(1,"#232a1d");
+  c.fillStyle=g;c.fillRect(0,0,W,H);
+  for(let i=0;i<28;i++){const b=i*13+7,x=W/2+wrap(b-H0.yaw)/FOV*W;c.fillStyle="rgba(20,28,18,.8)";c.beginPath();c.moveTo(x-18,H*0.56);c.lineTo(x,H*0.56-24-(i*7)%30);c.lineTo(x+18,H*0.56);c.fill();}
+  c.fillStyle="rgba(0,0,0,.18)";c.fillRect(0,0,W,H);
+  const hud="#9ff2c8",warn="#ffb13d",crit="#ff5a4e";c.font="600 14px 'Chakra Petch', sans-serif";c.lineWidth=1.5;
+  // pusula şeridi
+  c.strokeStyle=hud;c.fillStyle=hud;c.textAlign="center";
+  for(let a=-60;a<=60;a+=5){const deg=Math.round(H0.yaw+a),x=W/2+a/FOV*W;const m=((deg%360)+360)%360;
+    c.beginPath();c.moveTo(x,34);c.lineTo(x,m%15===0?22:29);c.stroke();
+    if(m%45===0)c.fillText({0:"K",45:"KD",90:"D",135:"GD",180:"G",225:"GB",270:"B",315:"KB"}[m],x,16);else if(m%15===0){c.font="11px 'IBM Plex Mono', monospace";c.fillText(m,x,16);c.font="600 14px 'Chakra Petch', sans-serif";}}
+  c.beginPath();c.moveTo(W/2,38);c.lineTo(W/2-6,46);c.lineTo(W/2+6,46);c.closePath();c.fill();
+  // tehditler
+  const sorted=[...H0.th].sort((a,b)=>a.r/a.v-b.r/b.v);
+  sorted.forEach((t,rank)=>{const tti=t.r/t.v,col=tti<4?crit:warn,rel=wrap(t.b-H0.yaw);
+    if(Math.abs(rel)<FOV/2-4){const x=W/2+rel/FOV*W,y=H*0.56-20-Math.max(0,(t.r-50)/400)*40,s=14+Math.max(0,(200-t.r)/200)*18;
+      c.strokeStyle=col;c.lineWidth=2;c.strokeRect(x-s,y-s,2*s,2*s);c.fillStyle=col;c.textAlign="center";
+      c.font="700 18px 'Chakra Petch', sans-serif";c.fillText(tti.toFixed(1)+" s",x,y-s-8);
+      c.font="12px 'IBM Plex Mono', monospace";c.fillText(Math.round(t.r)+" m · "+t.kind,x,y+s+16);
+      if(rank===0){c.fillText("ÖNCELİK 1",x,y+s+31);}}
+    else{const left=rel<0,x=left?26:W-26,y=H*0.42+rank*46;c.fillStyle=col;c.beginPath();
+      if(left){c.moveTo(x-14,y);c.lineTo(x+6,y-12);c.lineTo(x+6,y+12);}else{c.moveTo(x+14,y);c.lineTo(x-6,y-12);c.lineTo(x-6,y+12);}c.fill();
+      c.textAlign=left?"left":"right";c.font="700 16px 'Chakra Petch', sans-serif";c.fillText(tti.toFixed(1)+" s",left?x+12:x-12,y+26);}
+  });
+  // kritik uyarı bandı
+  const minT=sorted.length?sorted[0].r/sorted[0].v:99;
+  if(minT<4&&Math.floor(H0.t*4)%2===0){c.strokeStyle=crit;c.lineWidth=6;c.strokeRect(3,3,W-6,H-6);c.lineWidth=1.5;}
+  // alt durum çubuğu
+  c.fillStyle="rgba(5,12,10,.55)";c.fillRect(0,H-40,W,40);c.textAlign="left";c.font="600 14px 'Chakra Petch', sans-serif";
+  const items=[["AĞ",$("hNet").value==="on"?"4/4":"KOPTU",$("hNet").value==="on"?hud:crit],["SÜRÜ",H0.th.length<=1?String(H0.th.length):H0.th.length<=3?"2–3":"ÇOK",H0.th.length>1?warn:hud],["TÜP","9",hud],["SES GÜVENİ",Math.round(100*(sorted[0]?sorted[0].conf:0))+"%",hud]];
+  let x=16;items.forEach(([k,v,col])=>{c.fillStyle="rgba(159,242,200,.7)";c.fillText(k,x,H-15);x+=c.measureText(k).width+8;c.fillStyle=col;c.fillText(v,x,H-15);x+=c.measureText(v).width+28;});
+  c.textAlign="right";c.fillStyle=hud;c.fillText("YÖN "+String(Math.round(((H0.yaw%360)+360)%360)).padStart(3,"0")+"°",W-16,H-15);
+}
+let last=0;function loop(ts){const dt=Math.min(0.05,(ts-last)/1000||0);last=ts;if(!$("p-hud").hidden){step(dt*(+$("hSp").value));draw();}requestAnimationFrame(loop);}
+cv.addEventListener("pointerdown",e=>{H0.drag={x:e.clientX,y:H0.yaw};cv.setPointerCapture(e.pointerId);});
+cv.addEventListener("pointermove",e=>{if(H0.drag){const k=FOV/cv.getBoundingClientRect().width;H0.yaw=H0.drag.y-(e.clientX-H0.drag.x)*k;}});
+cv.addEventListener("pointerup",()=>H0.drag=null);
+window.addEventListener("keydown",e=>{if($("p-hud").hidden)return;if(e.key==="ArrowLeft")H0.yaw-=10;if(e.key==="ArrowRight")H0.yaw+=10;});
+$("hGo").onclick=spawn;$("hN").onchange=spawn;spawn();requestAnimationFrame(loop);
+})();
+</script>
+<script>
+(function(){
+const D={"yol": [["Basit tarak (demo)", 0.54], ["Beyazlatılmış tarak", 0.79], ["Kare kare tarak", 0.87], ["Ayrık test", 0.89], ["Öğrenen model (ayrık test)", 0.97]], "capraz": [["İç mekan → açık alan", 0.84], ["Çeşitli dron → açık alan", 0.82], ["+30 s saha kaydı", 0.83], ["Açık alan kendi verisi", 0.99]], "oy": [["Tek asker", 88, 22], ["2/4", 99.3, 21.2], ["2/4 + 2 pencere", 98.7, 4.3], ["3/4", 92.5, 3.5], ["3/4 + 2 pencere", 85.7, 0.13], ["Uçtan uca iç mekan", 98.7, 4.1], ["Açık alan 2/4 + 2", 38.3, 1.7], ["Açık alan 1/4 + 2", 83.2, 13.5]]};const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function bars(el,rows,opt){const w=620,rh=34,L=190,h=rows.length*rh+30,iw=w-L-175;let s=`<svg viewBox="0 0 ${w} ${h}" font-family="IBM Plex Mono, monospace" font-size="12">`;
+ const X=v=>L+iw*(v-opt.min)/(opt.max-opt.min);
+ (opt.ticks||[]).forEach(t=>{s+=`<line x1="${X(t)}" x2="${X(t)}" y1="0" y2="${h-22}" stroke="${css("--line")}"/><text x="${X(t)}" y="${h-6}" text-anchor="middle" fill="${css("--muted")}">${t}</text>`;});
+ if(opt.ref!==undefined)s+=`<line x1="${X(opt.ref)}" x2="${X(opt.ref)}" y1="0" y2="${h-22}" stroke="${css("--threat")}" stroke-dasharray="4 4"/>`;
+ rows.forEach((r,i)=>{const y=i*rh+6;s+=`<text x="${L-8}" y="${y+16}" text-anchor="end" fill="${css("--text")}">${r[0]}</text>`;
+  opt.series.forEach((se,k)=>{const v=r[1+k],bh=opt.series.length>1?10:18,yy=y+4+k*(bh+2);s+=`<rect x="${L}" y="${yy}" width="${Math.max(1,X(v)-L)}" height="${bh}" fill="${se.c}"/><text x="${X(v)+5}" y="${yy+bh-1}" fill="${css("--text")}">${se.f(v)}</text>`;});});
+ if(opt.series.length>1){let lx=L;opt.series.forEach(se=>{s+=`<rect x="${lx}" y="${h-18}" width="10" height="3" fill="${se.c}"/>`;lx+=0;});}
+ el.innerHTML=s+"</svg>";}
+const f2=v=>v.toFixed(2);
+bars(document.getElementById("dv1"),D.yol,{min:0.5,max:1,ticks:[0.5,0.6,0.7,0.8,0.9,1],series:[{c:css("--amber"),f:f2}]});
+bars(document.getElementById("dv2"),D.capraz,{min:0.5,max:1,ticks:[0.5,0.6,0.7,0.8,0.9,1],series:[{c:css("--track"),f:f2}]});
+bars(document.getElementById("dv3"),D.oy,{min:0,max:100,ticks:[0,25,50,75,100],series:[{c:css("--ok"),f:v=>"tespit %"+v},{c:css("--threat"),f:v=>"yanlış alarm %"+v}]});
+bars(document.getElementById("dv4"),[["Tek mikrofon spektrum",9,0],["Tek dizi yön haritası",62,40],["4 asker kesişim",60,12],["+ileri nokta, kesişim",20,16],["+ileri nokta, ses imzası",30,30]],{min:0,max:100,ticks:[0,25,50,75,100],series:[{c:css("--amber"),f:v=>"2 dron %"+v},{c:css("--track"),f:v=>"3 dron %"+v}]});
+})();
+</script>
+<script>
+(function(){
+const $=id=>document.getElementById(id);const cv=$("nc"),c=cv.getContext("2d");
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function g(){let u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+function nodes(){const k=+$("nSpread").value;const S=[[-22,0],[-7,4],[8,-3],[23,2]].map(([x,y])=>[x*k,y]);const F=+$("nFwd").value?[[-80,150],[80,150]]:[];return {S,F};}
+function tri(P,T){let a=0,b=0,d=0,e=0,f=0;for(let i=0;i<P.length;i++){const nx=-Math.cos(T[i]),ny=Math.sin(T[i]);a+=nx*nx;b+=nx*ny;d+=ny*ny;const q=nx*P[i][0]+ny*P[i][1];e+=nx*q;f+=ny*q;}const det=a*d-b*b;if(Math.abs(det)<1e-3)return null;return [(d*e-b*f)/det,(a*f-b*e)/det];}
+function run(){
+  const {S,F}=nodes(),all=S.concat(F),R=+$("nR").value,B=+$("nB").value*Math.PI/180,loss=+$("nLoss").value,sig=+$("nSig").value*Math.PI/180;
+  const T=[R*Math.sin(B),R*Math.cos(B)],est=[],lines=[];
+  for(let k=0;k<200;k++){const P=[],A=[];all.forEach(p=>{if(Math.hypot(T[0]-p[0],T[1]-p[1])>350||Math.random()<loss)return;const th=Math.atan2(T[0]-p[0],T[1]-p[1])+g()*sig;P.push(p);A.push(th);if(k===0)lines.push([p,th]);});
+    if(P.length>=2){const e=tri(P,A);if(e)est.push(e);}}
+  const errs=est.map(e=>Math.hypot(e[0]-T[0],e[1]-T[1])).sort((a,b)=>a-b);
+  $("nE").textContent=errs.length?errs[errs.length>>1].toFixed(1):"–";$("nV").textContent=Math.round(100*est.length/200);
+  // çizim
+  const W=cv.width,H=cv.height,k=H/460,ox=W/2,oy=H-60;const X=x=>ox+x*k,Y=y=>oy-y*k;
+  c.fillStyle="#081014";c.fillRect(0,0,W,H);c.font="12px 'IBM Plex Mono', monospace";
+  [100,200,300].forEach(r=>{c.strokeStyle="rgba(124,147,153,.2)";c.beginPath();c.arc(X(0),Y(0),r*k,Math.PI,2*Math.PI);c.stroke();c.fillStyle=css("--muted");c.fillText(r+" m",X(0)+r*k-30,Y(0)-4);});
+  c.lineWidth=1;lines.forEach(([p,th])=>{c.strokeStyle="rgba(92,200,224,.35)";c.beginPath();c.moveTo(X(p[0]),Y(p[1]));c.lineTo(X(p[0]+Math.sin(th)*420),Y(p[1]+Math.cos(th)*420));c.stroke();});
+  c.fillStyle="rgba(92,200,224,.55)";est.forEach(e=>{c.beginPath();c.arc(X(e[0]),Y(e[1]),2.2,0,7);c.fill();});
+  c.fillStyle=css("--threat");c.beginPath();c.arc(X(T[0]),Y(T[1]),6,0,7);c.fill();
+  c.fillStyle=css("--soldier");S.forEach(p=>c.fillRect(X(p[0])-4,Y(p[1])-4,8,8));
+  c.fillStyle=css("--ok");F.forEach(p=>{c.beginPath();c.moveTo(X(p[0]),Y(p[1])-7);c.lineTo(X(p[0])-6,Y(p[1])+5);c.lineTo(X(p[0])+6,Y(p[1])+5);c.fill();});
+}
+["nFwd","nSpread","nLoss","nSig","nR","nB"].forEach(id=>$(id).addEventListener("input",run));
+document.querySelector('[data-p="net"]').addEventListener("click",()=>setTimeout(run,0));run();
+})();
+</script>
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id),cv=$("cv2"),c=cv.getContext("2d");
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+// Tesisler: dikdörtgen tel örgü (m), dron hızı (m/s), güvenlik ekibinin ihtiyaç duyduğu tepki süresi (s)
+const SC={enerji:{w:320,h:220,v:12,need:30,t:"Trafo ve jeneratörlere keşif / taciz dronu"},
+  hava:{w:700,h:120,v:15,need:60,t:"Pist ve yaklaşma koridoruna giren dron: uçuşları durdurma kararı"},
+  cez:{w:180,h:180,v:10,need:20,t:"Avluya uyuşturucu / telefon bırakan dron"},
+  stad:{w:260,h:200,v:12,need:45,t:"Kalabalık üstüne dron: tahliye ya da müdahale"}};
+let last=null;
+function nodes(S,n,out){const P=[],per=2*(S.w+S.h),o=out?60:0,W=S.w+2*o,H=S.h+2*o,pr=2*(W+H);
+  for(let i=0;i<n;i++){let d=(i+0.5)*pr/n,x,y;
+    if(d<W){x=-W/2+d;y=H/2;}else if((d-=W)<H){x=W/2;y=H/2-d;}else if((d-=H)<W){x=W/2-d;y=-H/2;}else{d-=W;x=-W/2;y=-H/2+d;}P.push([x,y]);}return P;}
+function inside(S,x,y){return Math.abs(x)<=S.w/2&&Math.abs(y)<=S.h/2;}
+function run(){
+  const S=SC[$("cSc").value],n=+$("cN").value,R=+$("cR").value,ph=+$("cH").value,N=nodes(S,n,$("cL").value==="out");
+  const tr=[];let det=0,warn=[];
+  for(let k=0;k<500;k++){
+    const a=Math.random()*6.283,D=Math.max(S.w,S.h)/2+450,x0=D*Math.sin(a),y0=D*Math.cos(a);
+    const tx=(Math.random()-0.5)*S.w*0.6,ty=(Math.random()-0.5)*S.h*0.6,L=Math.hypot(tx-x0,ty-y0),ux=(tx-x0)/L,uy=(ty-y0)/L;
+    let run2=0,tDet=null,tIn=null,path=[];
+    for(let t=0;t<=L/S.v;t+=1){const x=x0+ux*S.v*t,y=y0+uy*S.v*t;if(k<40)path.push([x,y]);
+      if(tIn===null&&inside(S,x,y))tIn=t;
+      const heard=N.some(p=>Math.hypot(x-p[0],y-p[1])<R&&Math.random()<ph);
+      run2=heard?run2+1:0; if(tDet===null&&run2>=2)tDet=t;   // art arda 2 saniye duyulursa alarm
+      if(tIn!==null&&tDet!==null)break;}
+    if(tIn===null)tIn=L/S.v;
+    const ok=tDet!==null&&tDet<tIn;if(ok){det++;warn.push(tIn-tDet);}
+    if(k<40)tr.push({path,ok});
+  }
+  const mw=warn.length?warn.reduce((a,b)=>a+b,0)/warn.length:0;
+  $("cDet").textContent=Math.round(100*det/500);$("cWarn").textContent=mw.toFixed(1);
+  $("cCost").textContent=`${(n*1.1).toFixed(0)}–${(n*2.7).toFixed(0)}`;$("cNeed").textContent=S.need+" s";
+  $("cNote").textContent=S.t+". Alarm kuralı: herhangi bir düğüm art arda 2 saniye duyarsa. Uyarı süresi, dronun tel örgüye ulaşmasına kalan süre.";
+  last={S,N,R,tr};draw();
+}
+function draw(){if(!last)return;const {S,N,R,tr}=last,W=cv.width,H=cv.height,k=Math.min(W/(S.w+900),H/(S.h+900))*1.0,X=x=>W/2+x*k,Y=y=>H/2-y*k;
+  c.fillStyle="#081014";c.fillRect(0,0,W,H);
+  c.fillStyle="rgba(92,200,224,.07)";c.strokeStyle="rgba(92,200,224,.25)";N.forEach(p=>{c.beginPath();c.arc(X(p[0]),Y(p[1]),R*k,0,7);c.fill();c.stroke();});
+  c.strokeStyle=css("--soldier");c.lineWidth=2;c.strokeRect(X(-S.w/2),Y(S.h/2),S.w*k,S.h*k);c.lineWidth=1;
+  tr.forEach(t=>{c.strokeStyle=t.ok?"rgba(242,169,59,.55)":"rgba(255,90,78,.7)";c.beginPath();t.path.forEach(([x,y],i)=>i?c.lineTo(X(x),Y(y)):c.moveTo(X(x),Y(y)));c.stroke();});
+  c.fillStyle=css("--ok");N.forEach(p=>{c.beginPath();c.arc(X(p[0]),Y(p[1]),5,0,7);c.fill();});
+  c.fillStyle=css("--muted");c.font="12px 'IBM Plex Mono', monospace";c.fillText(`tesis ${S.w}×${S.h} m · dron ${S.v} m/s · ilk 40 rota`,14,22);
+  c.beginPath();c.moveTo(14,H-20);c.lineTo(14+100*k,H-20);c.strokeStyle=css("--muted");c.stroke();c.fillText("100 m",18+100*k,H-16);}
+["cSc","cN","cR","cH","cL"].forEach(id=>$(id).addEventListener("change",run));$("cGo").onclick=run;
+document.querySelector('[data-p="civ"]').addEventListener("click",()=>setTimeout(run,0));
+})();
+</script>
+<script src="dijital_ikiz.js"></script>
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  function hist(el,ted,teu,th){
+    const all=ted.concat(teu),lo=Math.min(...all),hi=Math.max(...all),nb=24,w=620,h=240,L=40,B=28;
+    const bw=(hi-lo)/nb||1,binD=new Array(nb).fill(0),binU=new Array(nb).fill(0);
+    ted.forEach(v=>{let b=Math.min(nb-1,Math.floor((v-lo)/bw));binD[b]++;});
+    teu.forEach(v=>{let b=Math.min(nb-1,Math.floor((v-lo)/bw));binU[b]++;});
+    const mx=Math.max(1,...binD,...binU),iw=w-L-10,ih=h-B-6;
+    const X=v=>L+iw*(v-lo)/(hi-lo||1),Y=c=>6+ih*(1-c/mx);
+    let s=`<svg viewBox="0 0 ${w} ${h}" font-family="IBM Plex Mono, monospace" font-size="11">`;
+    const bpw=iw/nb;
+    for(let i=0;i<nb;i++){const x=L+i*bpw;
+      s+=`<rect x="${x}" y="${Y(binU[i])}" width="${bpw*0.9}" height="${ih-(Y(binU[i])-6)}" fill="${css('--threat')}" opacity="0.55"/>`;
+      s+=`<rect x="${x}" y="${Y(binD[i])}" width="${bpw*0.9}" height="${ih-(Y(binD[i])-6)}" fill="${css('--track')}" opacity="0.7"/>`;}
+    s+=`<line x1="${X(th)}" x2="${X(th)}" y1="6" y2="${6+ih}" stroke="${css('--amber')}" stroke-width="2" stroke-dasharray="4 3"/>`;
+    s+=`<text x="${X(th)}" y="4" text-anchor="middle" fill="${css('--amber')}">eşik</text>`;
+    s+=`<text x="${L}" y="${h-8}" fill="${css('--muted')}">${lo.toFixed(1)} dB</text>`;
+    s+=`<text x="${w-10}" y="${h-8}" text-anchor="end" fill="${css('--muted')}">${hi.toFixed(1)} dB</text>`;
+    el.innerHTML=s+"</svg>";
+  }
+  const fmt=(v,d)=>v.toLocaleString("tr-TR",{minimumFractionDigits:d,maximumFractionDigits:d});
+  let ran=false;
+  $("ikGo").onclick=async()=>{
+    if($("ikGo").disabled)return;$("ikGo").disabled=true;
+    const t0=performance.now();
+    try{
+      const r=await window.DijitalIkiz.run((d,tot,lab)=>{$("ikProg").textContent=`Ölçülüyor… ${d}/${tot} kayıt (${lab})`;});
+      $("ikAUC").textContent=fmt(r.testAUC,3);
+      $("ikTh").textContent=fmt(r.esik,2);
+      $("ikDet").textContent=fmt(r.testTespit,1);
+      $("ikFa").textContent=fmt(r.testYanlis,1);
+      hist($("ikHist"),r.scores.test.drone,r.scores.test.unknown,r.esik);
+      const dt=((performance.now()-t0)/1000).toFixed(1);
+      $("ikProg").textContent=`Bitti: ${r.n.ted+r.n.teu} test + ${r.n.trd+r.n.tru} eğitim kaydı gerçek zamanlı ölçüldü (${dt} s). Eğitim AUC ${fmt(r.egitimAUC,3)}.`;
+      ran=true;
+    }catch(e){
+      $("ikProg").textContent="Ölçüm başarısız: "+e.message+" — Bu sekme gerçek .wav dosyalarını okur; dosyayı doğrudan açarsan (file://) tarayıcı engeller. Yerel bir sunucudan aç (ör. python -m http.server).";
+    }
+    $("ikGo").disabled=false;
+  };
+})();
+</script>
+<script src="arayuz_ekler.js"></script>

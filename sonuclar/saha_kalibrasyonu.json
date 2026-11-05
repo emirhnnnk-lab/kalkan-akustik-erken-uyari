@@ -1,0 +1,22 @@
+{
+ "0 s saha kaydı": {
+  "B_AUC": 0.812,
+  "tespit_%": 57.0,
+  "yanlis_alarm_%": 18.0
+ },
+ "10 s saha kaydı": {
+  "B_AUC": 0.815,
+  "tespit_%": 54.3,
+  "yanlis_alarm_%": 14.9
+ },
+ "30 s saha kaydı": {
+  "B_AUC": 0.834,
+  "tespit_%": 50.2,
+  "yanlis_alarm_%": 8.2
+ },
+ "50 s saha kaydı": {
+  "B_AUC": 0.828,
+  "tespit_%": 52.7,
+  "yanlis_alarm_%": 10.8
+ }
+}

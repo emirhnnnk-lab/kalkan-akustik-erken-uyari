@@ -1,0 +1,50 @@
+[
+ {
+  "kural": "1/4",
+  "art_arda": 1,
+  "tespit_%": 100.0,
+  "yanlis_alarm_%": 62.51
+ },
+ {
+  "kural": "1/4",
+  "art_arda": 2,
+  "tespit_%": 99.9,
+  "yanlis_alarm_%": 39.95
+ },
+ {
+  "kural": "2/4",
+  "art_arda": 1,
+  "tespit_%": 99.3,
+  "yanlis_alarm_%": 21.18
+ },
+ {
+  "kural": "2/4",
+  "art_arda": 2,
+  "tespit_%": 98.7,
+  "yanlis_alarm_%": 4.26
+ },
+ {
+  "kural": "3/4",
+  "art_arda": 1,
+  "tespit_%": 92.5,
+  "yanlis_alarm_%": 3.48
+ },
+ {
+  "kural": "3/4",
+  "art_arda": 2,
+  "tespit_%": 85.7,
+  "yanlis_alarm_%": 0.13
+ },
+ {
+  "kural": "4/4",
+  "art_arda": 1,
+  "tespit_%": 59.7,
+  "yanlis_alarm_%": 0.19
+ },
+ {
+  "kural": "4/4",
+  "art_arda": 2,
+  "tespit_%": 35.7,
+  "yanlis_alarm_%": 0.0
+ }
+]

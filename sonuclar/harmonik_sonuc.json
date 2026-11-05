@@ -1,0 +1,38 @@
+{
+ "n_dron": 80,
+ "n_diger": 80,
+ "AUC": 0.535,
+ "medyan_skor_dron": 8.48,
+ "medyan_skor_diger": 8.28,
+ "medyan_f0_dron_Hz": 310.5,
+ "esikler": [
+  {
+   "esik_dB": 2.5,
+   "tespit_%": 100.0,
+   "yanlis_alarm_%": 95.0
+  },
+  {
+   "esik_dB": 4,
+   "tespit_%": 97.5,
+   "yanlis_alarm_%": 85.0
+  },
+  {
+   "esik_dB": 6,
+   "tespit_%": 86.2,
+   "yanlis_alarm_%": 71.2
+  },
+  {
+   "esik_dB": 8,
+   "tespit_%": 56.2,
+   "yanlis_alarm_%": 52.5
+  },
+  {
+   "esik_dB": 10,
+   "tespit_%": 37.5,
+   "yanlis_alarm_%": 41.2
+  }
+ ],
+ "en_iyi_esik_dB": 5.13,
+ "en_iyi_tespit_%": 95.0,
+ "en_iyi_yanlis_alarm_%": 76.2
+}

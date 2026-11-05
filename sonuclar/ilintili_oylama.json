@@ -1,0 +1,27 @@
+[
+ {
+  "ortak_olay_olasiligi": 0,
+  "2/4+2_FA_%": 4.58,
+  "3/4_FA_%": 3.77
+ },
+ {
+  "ortak_olay_olasiligi": 0.05,
+  "2/4+2_FA_%": 8.62,
+  "3/4_FA_%": 7.0
+ },
+ {
+  "ortak_olay_olasiligi": 0.1,
+  "2/4+2_FA_%": 12.65,
+  "3/4_FA_%": 10.37
+ },
+ {
+  "ortak_olay_olasiligi": 0.2,
+  "2/4+2_FA_%": 21.37,
+  "3/4_FA_%": 17.31
+ },
+ {
+  "ortak_olay_olasiligi": 0.4,
+  "2/4+2_FA_%": 38.24,
+  "3/4_FA_%": 30.47
+ }
+]

@@ -1,0 +1,70 @@
+{
+ "looming": [
+  {
+   "gaz_dalgalanma_dB": 0,
+   "pencere_s": 0.5,
+   "tau_bagil_hata_%": 11.6,
+   "gecerli_%": 100
+  },
+  {
+   "gaz_dalgalanma_dB": 0,
+   "pencere_s": 1.0,
+   "tau_bagil_hata_%": 20.9,
+   "gecerli_%": 100
+  },
+  {
+   "gaz_dalgalanma_dB": 1,
+   "pencere_s": 0.5,
+   "tau_bagil_hata_%": 36.0,
+   "gecerli_%": 97
+  },
+  {
+   "gaz_dalgalanma_dB": 1,
+   "pencere_s": 1.0,
+   "tau_bagil_hata_%": 37.3,
+   "gecerli_%": 100
+  },
+  {
+   "gaz_dalgalanma_dB": 2,
+   "pencere_s": 0.5,
+   "tau_bagil_hata_%": 45.3,
+   "gecerli_%": 86
+  },
+  {
+   "gaz_dalgalanma_dB": 2,
+   "pencere_s": 1.0,
+   "tau_bagil_hata_%": 46.0,
+   "gecerli_%": 94
+  },
+  {
+   "gaz_dalgalanma_dB": 3,
+   "pencere_s": 0.5,
+   "tau_bagil_hata_%": 54.2,
+   "gecerli_%": 78
+  },
+  {
+   "gaz_dalgalanma_dB": 3,
+   "pencere_s": 1.0,
+   "tau_bagil_hata_%": 49.3,
+   "gecerli_%": 88
+  }
+ ],
+ "doppler": [
+  {
+   "gaz_frekans_oynamasi_%": 0,
+   "hiz_hatasi_m_s": 0.0
+  },
+  {
+   "gaz_frekans_oynamasi_%": 2,
+   "hiz_hatasi_m_s": 3.9
+  },
+  {
+   "gaz_frekans_oynamasi_%": 5,
+   "hiz_hatasi_m_s": 10.3
+  },
+  {
+   "gaz_frekans_oynamasi_%": 10,
+   "hiz_hatasi_m_s": 21.9
+  }
+ ]
+}

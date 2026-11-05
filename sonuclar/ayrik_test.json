@@ -1,0 +1,11 @@
+{
+ "esik_egitimden": 5.852,
+ "egitim_AUC": 0.869,
+ "test_AUC": 0.888,
+ "test_tespit_%": 88.0,
+ "test_yanlis_alarm_%": 22.0,
+ "n_test": [
+  100,
+  100
+ ]
+}

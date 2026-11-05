@@ -1,0 +1,68 @@
+{
+ "A (iç mekan, 180 dron) | lojistik": {
+  "B_AUC": 0.839,
+  "tespit_fa_0.5": [
+   42.3,
+   5.0
+  ],
+  "tespit_fa_neg95": [
+   64.3,
+   18.2
+  ]
+ },
+ "A (iç mekan, 180 dron) | MLP_32": {
+  "B_AUC": 0.771,
+  "tespit_fa_0.5": [
+   48.3,
+   8.5
+  ],
+  "tespit_fa_neg95": [
+   76.0,
+   42.7
+  ]
+ },
+ "DADS (1500 çeşitli dron) | lojistik": {
+  "B_AUC": 0.791,
+  "tespit_fa_0.5": [
+   16.7,
+   2.8
+  ],
+  "tespit_fa_neg95": [
+   49.0,
+   13.0
+  ]
+ },
+ "DADS (1500 çeşitli dron) | MLP_32": {
+  "B_AUC": 0.817,
+  "tespit_fa_0.5": [
+   19.3,
+   0.0
+  ],
+  "tespit_fa_neg95": [
+   59.3,
+   17.0
+  ]
+ },
+ "A + DADS | lojistik": {
+  "B_AUC": 0.812,
+  "tespit_fa_0.5": [
+   46.3,
+   11.5
+  ],
+  "tespit_fa_neg95": [
+   57.0,
+   18.0
+  ]
+ },
+ "A + DADS | MLP_32": {
+  "B_AUC": 0.78,
+  "tespit_fa_0.5": [
+   49.7,
+   11.7
+  ],
+  "tespit_fa_neg95": [
+   78.7,
+   42.7
+  ]
+ }
+}

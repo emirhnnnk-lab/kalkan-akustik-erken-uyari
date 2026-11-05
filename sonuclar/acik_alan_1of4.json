@@ -1,0 +1,52 @@
+{
+ "tekrarlar": [
+  {
+   "tek_tespit_%": 52.33333333333333,
+   "tek_FA_%": 11.75438596491228,
+   "zincir_rho0_tespit_%": 87.1375,
+   "zincir_rho0_FA_%": 14.9875,
+   "zincir_rho0.1_tespit_%": 87.05,
+   "zincir_rho0.1_FA_%": 21.3375
+  },
+  {
+   "tek_tespit_%": 53.666666666666664,
+   "tek_FA_%": 12.982456140350877,
+   "zincir_rho0_tespit_%": 88.0625,
+   "zincir_rho0_FA_%": 17.4,
+   "zincir_rho0.1_tespit_%": 88.9125,
+   "zincir_rho0.1_FA_%": 23.8
+  },
+  {
+   "tek_tespit_%": 43.333333333333336,
+   "tek_FA_%": 5.7894736842105265,
+   "zincir_rho0_tespit_%": 76.5125,
+   "zincir_rho0_FA_%": 4.875,
+   "zincir_rho0.1_tespit_%": 76.4125,
+   "zincir_rho0.1_FA_%": 7.7
+  },
+  {
+   "tek_tespit_%": 46.0,
+   "tek_FA_%": 3.8596491228070176,
+   "zincir_rho0_tespit_%": 79.2375,
+   "zincir_rho0_FA_%": 1.725,
+   "zincir_rho0.1_tespit_%": 80.6,
+   "zincir_rho0.1_FA_%": 3.625
+  },
+  {
+   "tek_tespit_%": 48.66666666666667,
+   "tek_FA_%": 7.719298245614035,
+   "zincir_rho0_tespit_%": 82.2375,
+   "zincir_rho0_FA_%": 7.2375,
+   "zincir_rho0.1_tespit_%": 82.975,
+   "zincir_rho0.1_FA_%": 11.025
+  }
+ ],
+ "ortalama": {
+  "tek_tespit_%": 48.8,
+  "tek_FA_%": 8.4,
+  "zincir_rho0_tespit_%": 82.6,
+  "zincir_rho0_FA_%": 9.2,
+  "zincir_rho0.1_tespit_%": 83.2,
+  "zincir_rho0.1_FA_%": 13.5
+ }
+}
