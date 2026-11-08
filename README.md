@@ -28,6 +28,22 @@ Küçük FPV dronları **sesinden** erken tespit eden, düşük maliyetli sensö
 
 Olumsuz sonuçları da bilerek tuttum: projenin en değerli dersi, sentetik varsayımı **erken** gerçek veriyle sınamaktı.
 
+## Böcek beyni: görsel algılama için doğadan ödünç devreler
+Küçük, hızlı ve kalabalık arka planda uçan bir hedefi az enerjiyle fark etmeyi en iyi yapan sistemler böcek beyinleri. Dört böcek devresini modelledim:
+
+| Böcek | Devre | Kalkan'daki işi |
+|---|---|---|
+| Yusufçuk | STMD (küçük hedef hareket dedektörü) | Ağaçlık bir arka planda küçük, hareketli noktayı seçmek |
+| Meyve sineği | T4/T5 (Hassenstein-Reichardt hareket devresi) | Kameranın kendi sarsıntısını dünyanın hareketinden ayırmak |
+| Çekirge | LGMD (yaklaşan cisim nöronu) | Büyüyen görüntüden çarpmaya kalan süreyi hesaplamak: τ = 1 / d(ln θ)/dt |
+| Ormia sineği | Mekanik bağlı minik kulaklar | Birbirine çok yakın mikrofonlarla hassas ses yönü (henüz simüle edilmedi) |
+
+- **Demoda:** "Böcek beyni" sekmesi. 80×60 piksellik sentetik bir orman sahnesi, olay kamerası modeli, STMD, T4/T5 akışı, looming ve 8 yön nöronunun ateşleme deseni tarayıcıda çalışıyor.
+- **Donanıma doğru:** LGMD, STMD ve T4/T5 devrelerinin Verilog (FPGA) sürümlerini yazıp test tezgâhında denedim. Her piksel paralel işlenebiliyor.
+  - T4/T5 temiz çalışıyor: sağa giden hareket +, sola giden −, durgun 0.
+  - **Dürüst sınır:** basit STMD, kameranın kendi hareketini küçük hedeften tam ayıramıyor (küçük hedef 202, kendi hareketi 167 puan). Temiz ayrım için gelişmiş sürüm (ESTMD) gerekiyor.
+- Gazebo'da fizik ikizi kuruldu: kameraya doğru uçan dron sahnesi. Kamera görüntüsünü böcek devrelerine bağlayan köprü henüz yazılmadı.
+
 ## Yapı
 ```
 index.html   Tarayıcıda çalışan interaktif demo
