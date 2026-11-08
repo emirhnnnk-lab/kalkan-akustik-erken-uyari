@@ -1,5 +1,7 @@
 # Kalkan — FPV Drone Akustik Erken Uyarı Sistemi
 
+> **EN summary:** R&D on a low-cost acoustic early-warning sensor network for small FPV drones (defensive, warning-only). An honest results table: a naive harmonic detector was near-random on real recordings (AUC 0.54); spectral whitening and frame-wise comb scoring reached AUC 0.89 on held-out data, but only 0.77 on a different dataset, so field calibration is required. Includes a small model exported to C for microcontrollers.
+
 Küçük FPV dronları **sesinden** erken tespit eden, düşük maliyetli sensör ağı Ar-Ge'si. Ham sesten başlayıp sinyal işleme, öğrenen model, ağ oylaması ve mikrodenetleyiciye gömülecek C koduna kadar uçtan uca bir zincir.
 
 > **Savunma amaçlıdır.** Sistemin tek işlevi erken uyarıdır; hiçbir sürümde bir canlıya zarar verecek bir işlev yoktur. Bkz. [ETIK_ILKE.md](ETIK_ILKE.md).
