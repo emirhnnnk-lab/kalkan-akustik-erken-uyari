@@ -44,9 +44,6 @@ The systems that are best at noticing something small and fast flying against a 
   - **Honest limit:** the simple dragonfly circuit can't fully separate the camera's own motion from a small target (small target 202, own motion 167 points). A clean separation needs its more advanced version (ESTMD).
 - I built a physics twin in Gazebo: a scene with a drone flying toward the camera. I haven't yet written the bridge that feeds the camera image into the insect circuits.
 
-## A bug I found after publishing (Nov 8)
-The demo's "Measure live on real recordings" button worked on my computer but failed online. The reason: the button read 360 real audio recordings, and those recordings were not in the repo. The dataset has no open license, so I can't distribute them. The fix: I calculated each recording's score on my own computer with the same code and published only the numbers (`sonuclar/ikiz_skorlar.json`). The threshold and AUC are now calculated live in the browser from those numbers, and the result matches my published figures exactly: AUC 0.888, detection 88%, false alarms 22%.
-
 ## Structure
 ```
 index.html   Interactive demo that runs in the browser

@@ -44,9 +44,6 @@ Küçük, hızlı ve kalabalık bir arka planda uçan bir şeyi çok az enerjiyl
   - **Dürüst sınır:** basit yusufçuk devresi, kameranın kendi hareketini küçük hedeften tam ayıramıyor (küçük hedef 202, kendi hareketi 167 puan). Temiz bir ayrım için daha gelişmiş sürümü (ESTMD) gerekiyor.
 - Gazebo'da bir fizik ikizi kurdum: kameraya doğru uçan bir dron sahnesi. Kamera görüntüsünü böcek devrelerine bağlayan köprüyü henüz yazmadım.
 
-## Yayında bulduğum bir hata (08.11)
-Demodaki "Gerçek kayıtlarda canlı ölç" düğmesi benim bilgisayarımda çalışıyordu ama yayında hata veriyordu. Sebebi: düğme 360 gerçek ses kaydını okuyordu, ve o kayıtlar repoda yoktu. Veri setinin açık bir lisansı olmadığı için kayıtları dağıtamıyorum. Çözüm: her kaydın skorunu aynı kodla kendi bilgisayarımda hesapladım ve sadece sayıları yayınladım (`sonuclar/ikiz_skorlar.json`). Eşik ve AUC artık tarayıcıda bu sayılardan canlı hesaplanıyor ve sonuç yayınladığım rakamlarla birebir aynı: AUC 0,888, tespit %88, yanlış alarm %22.
-
 ## Yapı
 ```
 index.html   Tarayıcıda çalışan etkileşimli demo
