@@ -1091,18 +1091,34 @@ document.querySelector('[data-p="civ"]').addEventListener("click",()=>setTimeout
   }
   const fmt=(v,d)=>v.toLocaleString("tr-TR",{minimumFractionDigits:d,maximumFractionDigits:d});
   let ran=false;
+  // Yayın sürümü: ses dosyaları (DroneAudioDataset) lisans gereği dağıtılmıyor. Kayıt başına skorlar
+  // dijital_ikiz.js ile yerelde hesaplanıp yayınlandı; eşik (Youden, eğitim) ve AUC burada canlı hesaplanır.
+  async function skorlardanOlc(){
+    const S=(await (await fetch("sonuclar/ikiz_skorlar.json")).json()).skor;
+    const auc=(a,b)=>{let s=0;for(const x of a)for(const y of b)s+=x>y?1:x===y?.5:0;return s/(a.length*b.length)};
+    const frac=(a,t)=>a.filter(v=>v>t).length/a.length;
+    const trd=S.train.drone,tru=S.train.unknown,ted=S.test.drone,teu=S.test.unknown;
+    const lo=Math.min(...trd,...tru),hi=Math.max(...trd,...tru);let th=lo,bj=-2;
+    for(let i=0;i<400;i++){const t=lo+(hi-lo)*i/399,j=frac(trd,t)-frac(tru,t);if(j>bj){bj=j;th=t}}
+    return{n:{trd:trd.length,tru:tru.length,ted:ted.length,teu:teu.length},scores:S,esik:th,egitimAUC:auc(trd,tru),testAUC:auc(ted,teu),
+      testTespit:100*frac(ted,th),testYanlis:100*frac(teu,th)};
+  }
   $("ikGo").onclick=async()=>{
     if($("ikGo").disabled)return;$("ikGo").disabled=true;
     const t0=performance.now();
     try{
-      const r=await window.DijitalIkiz.run((d,tot,lab)=>{$("ikProg").textContent=`Ölçülüyor… ${d}/${tot} kayıt (${lab})`;});
+      let onceden=false;
+      const r=window.DijitalIkiz?await window.DijitalIkiz.run((d,tot,lab)=>{$("ikProg").textContent=`Ölçülüyor… ${d}/${tot} kayıt (${lab})`;})
+        :(onceden=true,await skorlardanOlc());
       $("ikAUC").textContent=fmt(r.testAUC,3);
       $("ikTh").textContent=fmt(r.esik,2);
       $("ikDet").textContent=fmt(r.testTespit,1);
       $("ikFa").textContent=fmt(r.testYanlis,1);
       hist($("ikHist"),r.scores.test.drone,r.scores.test.unknown,r.esik);
       const dt=((performance.now()-t0)/1000).toFixed(1);
-      $("ikProg").textContent=`Bitti: ${r.n.ted+r.n.teu} test + ${r.n.trd+r.n.tru} eğitim kaydı gerçek zamanlı ölçüldü (${dt} s). Eğitim AUC ${fmt(r.egitimAUC,3)}.`;
+      $("ikProg").textContent=onceden
+        ?`Bitti: ${r.n.ted+r.n.teu} test + ${r.n.trd+r.n.tru} eğitim kaydı. Ses dosyaları lisans gereği yayında olmadığı için kayıt başına skorlar aynı kodla yerelde hesaplandı (sonuclar/ikiz_skorlar.json); eşik seçimi ve AUC şu an tarayıcında hesaplandı. Eğitim AUC ${fmt(r.egitimAUC,3)}.`
+        :`Bitti: ${r.n.ted+r.n.teu} test + ${r.n.trd+r.n.tru} eğitim kaydı gerçek zamanlı ölçüldü (${dt} s). Eğitim AUC ${fmt(r.egitimAUC,3)}.`;
       ran=true;
     }catch(e){
       $("ikProg").textContent="Ölçüm başarısız: "+e.message+" — Bu sekme gerçek .wav dosyalarını okur; dosyayı doğrudan açarsan (file://) tarayıcı engeller. Yerel bir sunucudan aç (ör. python -m http.server).";
