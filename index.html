@@ -102,7 +102,7 @@ nav.tabs button[aria-selected="true"] .kb{color:var(--bg)}
   <button role="tab" id="tab-hud" aria-selected="false" data-p="hud">Vizör <span class="kb k">KAVRAM</span></button>
   <button role="tab" id="tab-karar" aria-selected="false" data-p="karar">Olay mesajı + Dur kuralı <span class="kb k">KAVRAM</span></button>
   <button role="tab" id="tab-bug" aria-selected="false" data-p="bug">Böcek beyni: sinek + yusufçuk <span class="kb s">SİMÜLASYON</span></button>
-  <button role="tab" id="tab-ormia" aria-selected="false" data-p="ormia">Ormia kulağı (yön bulma) <span class="kb s">SİMÜLASYON</span></button>
+  <button role="tab" id="tab-ormia" aria-selected="false" data-p="ormia" hidden>Ormia kulağı (yön bulma) <span class="kb s">SİMÜLASYON</span></button>
   <button role="tab" id="tab-civ" aria-selected="false" data-p="civ">Sivil koruma <span class="kb s">SİMÜLASYON</span></button>
   <button role="tab" id="tab-mc" aria-selected="false" data-p="mc">Monte Carlo verisi <span class="kb s">SİMÜLASYON</span></button>
 </nav>
@@ -268,7 +268,7 @@ nav.tabs button[aria-selected="true"] .kb{color:var(--bg)}
     <h3>Bu sekme ne yapıyor?</h3>
     <p class="note">Yukarıdaki "Gerçek veri" sekmesi önceden hesaplanmış sayıları çizer. <b>Bu sekme ise gerçek dijital ikizdir:</b> tarayıcı, diskteki gerçek ses kayıtlarını (160 eğitim + 200 test, toplam 360 <code>.wav</code>) tek tek okur, her birinin beyazlatılmış harmonik tarak skorunu <b>o an hesaplar</b>, eşiği eğitim kümesinden seçer ve AUC'yi görülmemiş test kümesinde canlı ölçer. Gömülü sabit sayı yoktur. (Python <code>ayrik_test.py</code> ile aynı matematik — karşılaştırma için beklenen değerler aşağıda.)</p>
     <div class="btns"><button class="btn primary" id="ikGo">Gerçek kayıtlarda canlı ölç</button></div>
-    <p class="note" id="ikProg" style="margin:10px 0 0">Hazır. Çalıştırmak için düğmeye bas (yerel sunucu üzerinden açılmalı).</p>
+    <p class="note" id="ikProg" style="margin:10px 0 0">Hazır. Sonuçları görmek için düğmeye bas.</p>
   </div>
   <div class="charts">
     <div class="box"><h3>Canlı ölçülen sonuç</h3><div class="stats">
